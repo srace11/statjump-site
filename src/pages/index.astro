@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import StoreBadges from '../components/StoreBadges.astro';
+import { app } from '../app.config';
+---
+<Base>
+  <section class="hero wrap">
+    <img class="hero-icon" src={app.icon} alt={`${app.name} icon`} width="96" height="96" />
+    <h1>{app.name}</h1>
+    <p class="tagline">{app.tagline}</p>
+    <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+  </section>
+
+  <section class="wrap features" aria-label="Features">
+    {app.features.map((f) => (
+      <article class="feature">
+        <div class="feature-icon" aria-hidden="true">{f.icon}</div>
+        <h2>{f.title}</h2>
+        <p>{f.body}</p>
+      </article>
+    ))}
+  </section>
+
+  {app.screenshots.length > 0 && (
+    <section class="shots-section" aria-label="Screenshots">
+      <div class="shots wrap">
+        {app.screenshots.map((s) => (
+          <img src={s.src} alt={s.alt} width="300" height="650" loading="lazy" decoding="async" />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="wrap cta">
+    <h2>Get {app.name}</h2>
+    <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+    <p class="muted">Questions? <a href="/support">Visit support</a> or email <a href={`mailto:${app.contactEmail}`}>{app.contactEmail}</a>.</p>
+  </section>
+</Base>
+
+<style>
+  .hero { text-align: center; padding: 72px 20px 56px; display: flex; flex-direction: column; align-items: center; }
+  .hero-icon { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 16px 40px -16px var(--accent); margin-bottom: 24px; }
+  .hero h1 { font-size: clamp(2.4rem, 9vw, 4rem); line-height: 1.05; letter-spacing: -.035em; margin: 0 0 14px; }
+  .tagline { font-size: clamp(1.1rem, 3.5vw, 1.35rem); color: var(--muted); max-width: 36rem; margin: 0 0 32px; }
+  .hero :global(.badges) { justify-content: center; }
+
+  .features { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .features { grid-template-columns: repeat(3, 1fr); } }
+  .feature { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .feature-icon { font-size: 1.6rem; width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px;
+    background: color-mix(in srgb, var(--accent) 14%, transparent); margin-bottom: 14px; }
+  .feature h2 { font-size: 1.1rem; margin: 0 0 6px; }
+  .feature p { margin: 0; color: var(--muted); }
+
+  .shots-section { margin-top: 64px; }
+  .shots { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; }
+  .shots img { flex: 0 0 auto; width: min(240px, 70vw); aspect-ratio: 300 / 650; object-fit: cover;
+    border-radius: 24px; border: 1px solid var(--line); scroll-snap-align: start; }
+  @media (min-width: 900px) { .shots { justify-content: center; } }
+
+  .cta { text-align: center; margin-top: 72px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .cta h2 { font-size: 1.8rem; margin: 0; letter-spacing: -.02em; }
+  .cta :global(.badges) { justify-content: center; }
+  .muted { color: var(--muted); margin: 0; }
+</style>

@@ -1,0 +1,78 @@
+---
+import '../styles/global.css';
+import { app } from '../app.config';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = app.description } = Astro.props;
+const pageTitle = title ? `${title} | ${app.name}` : `${app.name}: ${app.tagline}`;
+// build.format 'file' makes pathname end in .html (/index.html, /privacy.html);
+// strip that so links and the canonical match the served URLs (/, /privacy).
+const path = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/(.)\/$/, '$1') || '/';
+const canonical = new URL(path, app.url).href;
+const ogImage = new URL(app.ogImage, app.url).href;
+const nav = [
+  { href: '/support', label: 'Support' },
+  { href: '/privacy', label: 'Privacy' },
+  { href: '/terms', label: 'Terms' },
+];
+const brandVars = `--brand:${app.colors.accent};--brand-dark:${app.colors.accentDark};--brand-text:${app.colors.accentText}`;
+---
+<!doctype html>
+<html lang="en" style={brandVars}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={app.icon} />
+    <link rel="apple-touch-icon" href={app.icon} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content={app.colors.accent} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={app.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">
+          <img src={app.icon} alt="" width="32" height="32" />
+          <span>{app.name}</span>
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          {nav.map((l) => (
+            <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>&copy; {new Date().getFullYear()} {app.developer}. <a href={app.hubUrl}>More apps</a></span>
+        <span>
+          <a href="/support">Support</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+---
+import Policy from '../layouts/Policy.astro';
+import * as doc from '../policies/privacy.md';
+---
+<Policy title="Privacy Policy" effectiveDate={doc.frontmatter.effectiveDate} hasTodos={doc.rawContent().includes('TODO')}>
+  <doc.Content />
+</Policy>

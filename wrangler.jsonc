@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Must match the Worker's name in the Cloudflare dashboard.
+  "name": "volleyball-jump-site",
+  "compatibility_date": "2026-09-01",
+  // Builds the Astro site before every deploy, then serves dist/ as static files.
+  "build": { "command": "npm run build" },
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  // Attaches the subdomain and creates its DNS record on deploy.
+  "routes": [{ "pattern": "volleyball.shaneracey.com", "custom_domain": true }]
+}

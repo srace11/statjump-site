@@ -1,0 +1,49 @@
+---
+// Renders a markdown policy from src/policies/ with the app's name,
+// developer and contact email pulled from app.config.ts.
+import Base from './Base.astro';
+import { app } from '../app.config';
+
+interface Props {
+  title: string;
+  effectiveDate: string;
+  hasTodos: boolean;
+}
+const { title, effectiveDate, hasTodos } = Astro.props;
+
+const parsed = new Date(`${effectiveDate}T00:00:00`);
+const dateLabel = Number.isNaN(parsed.getTime())
+  ? effectiveDate
+  : parsed.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<Base title={title} description={`${title} for ${app.name}.`}>
+  <article class="wrap prose">
+    {hasTodos && (
+      <p class="draft" role="note">
+        Draft: this page still contains TODO placeholders. Fill them in truthfully before submitting the app for review.
+      </p>
+    )}
+    <h1>{title}</h1>
+    <p class="meta">Effective date: {dateLabel}</p>
+    <p>
+      This {title.toLowerCase()} applies to <strong>{app.name}</strong> (the "App"), published by
+      {' '}{app.developer} ("we", "us"). It also applies to this website, {new URL(app.url).host}.
+    </p>
+
+    <slot />
+
+    <h2>Contact</h2>
+    <p>
+      Questions about this {title.toLowerCase()}, or requests about your data, can be sent to
+      {' '}<a href={`mailto:${app.contactEmail}`}>{app.contactEmail}</a>. We aim to reply within 7 days.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .draft {
+    background: color-mix(in srgb, #f59e0b 16%, transparent);
+    border: 1px solid color-mix(in srgb, #f59e0b 50%, transparent);
+    border-radius: 12px; padding: 12px 16px; font-weight: 600; margin: 0 0 28px;
+  }
+</style>
