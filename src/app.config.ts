@@ -16,7 +16,7 @@ export const app = {
   hubUrl: 'https://shaneracey.com',
 
   // Support contact. This address is published on the support, privacy and terms pages.
-  contactEmail: 'support@shaneracey.com',
+  contactEmail: '', // Not published yet. Set it before restoring the support and policy pages.
 
   // Images in public/. Replace the files or point these at new ones.
   icon: '/brand/stat-jump-app-icon.svg',
