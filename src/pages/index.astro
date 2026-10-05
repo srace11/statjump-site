@@ -4,17 +4,21 @@ import StoreBadges from '../components/StoreBadges.astro';
 import { app } from '../app.config';
 ---
 <Base>
-  <section class="hero wrap">
-    <img class="hero-icon" src={app.icon} alt={`${app.name} icon`} width="96" height="96" />
-    <h1>{app.name}</h1>
-    <p class="tagline">{app.tagline}</p>
-    <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+  <section class="hero">
+    <div class="wrap hero-in">
+      <h1>
+        <img src="/brand/stat-jump-lockup-reverse.svg" alt={`${app.name} Volleyball`} width="477" height="93" />
+      </h1>
+      <p class="slogan">{app.tagline}</p>
+      <p class="lead">{app.description}</p>
+      <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+    </div>
   </section>
 
-  <section class="wrap features" aria-label="Features">
+  <section class="wrap features" aria-label="How it works">
     {app.features.map((f) => (
       <article class="feature">
-        <div class="feature-icon" aria-hidden="true">{f.icon}</div>
+        <div class="feature-num" aria-hidden="true">{f.icon}</div>
         <h2>{f.title}</h2>
         <p>{f.body}</p>
       </article>
@@ -39,18 +43,20 @@ import { app } from '../app.config';
 </Base>
 
 <style>
-  .hero { text-align: center; padding: 72px 20px 56px; display: flex; flex-direction: column; align-items: center; }
-  .hero-icon { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 16px 40px -16px var(--accent); margin-bottom: 24px; }
-  .hero h1 { font-size: clamp(2.4rem, 9vw, 4rem); line-height: 1.05; letter-spacing: -.035em; margin: 0 0 14px; }
-  .tagline { font-size: clamp(1.1rem, 3.5vw, 1.35rem); color: var(--muted); max-width: 36rem; margin: 0 0 32px; }
-  .hero :global(.badges) { justify-content: center; }
+  /* Navy band with Volt: the brand's loudest look. Volt is text-safe on navy only. */
+  .hero { background: var(--band); color: #fff; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%); }
+  .hero-in { padding: 64px 20px 104px; display: flex; flex-direction: column; align-items: flex-start; }
+  .hero h1 { margin: 0 0 28px; }
+  .hero h1 img { width: min(420px, 100%); height: auto; }
+  .slogan { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase;
+    font-size: clamp(3rem, 11vw, 4.5rem); line-height: .95; letter-spacing: -.01em; color: var(--volt); margin: 0 0 20px; }
+  .lead { font-size: clamp(1.05rem, 3.2vw, 1.25rem); color: #d5deea; max-width: 34rem; margin: 0 0 32px; }
 
-  .features { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  .features { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 56px; }
   @media (min-width: 720px) { .features { grid-template-columns: repeat(3, 1fr); } }
   .feature { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
-  .feature-icon { font-size: 1.6rem; width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px;
-    background: color-mix(in srgb, var(--accent) 14%, transparent); margin-bottom: 14px; }
-  .feature h2 { font-size: 1.1rem; margin: 0 0 6px; }
+  .feature-num { font-family: var(--font-mono); font-weight: 700; font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+  .feature h2 { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; line-height: 1.1; margin: 0 0 6px; }
   .feature p { margin: 0; color: var(--muted); }
 
   .shots-section { margin-top: 64px; }
@@ -60,7 +66,7 @@ import { app } from '../app.config';
   @media (min-width: 900px) { .shots { justify-content: center; } }
 
   .cta { text-align: center; margin-top: 72px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  .cta h2 { font-size: 1.8rem; margin: 0; letter-spacing: -.02em; }
+  .cta h2 { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase; font-size: 2.4rem; margin: 0; }
   .cta :global(.badges) { justify-content: center; }
   .muted { color: var(--muted); margin: 0; }
 </style>

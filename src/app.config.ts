@@ -3,13 +3,13 @@
 
 export const app = {
   // Basics
-  name: 'Volleyball Jump Mechanics',
-  tagline: 'Film your approach and jump, then see exactly where you can gain height at the net.',
+  name: 'Stat Jump',
+  tagline: 'Kill it with data.',
   description:
-    'Record your volleyball approach and jump on your phone and get feedback on the mechanics that add height. Placeholder page.',
+    'Stat Jump turns a phone video of your volleyball approach and jump into numbers you can train against.',
 
   // Full URL of this mini-site, no trailing slash. Used for SEO, the sitemap and link previews.
-  url: 'https://volleyball.shaneracey.com',
+  url: 'https://statjump.shaneracey.com',
 
   // Developer / legal entity shown on the policy pages.
   developer: 'Shane Racey',
@@ -19,15 +19,15 @@ export const app = {
   contactEmail: 'support@shaneracey.com',
 
   // Images in public/. Replace the files or point these at new ones.
-  icon: '/icon.svg',
+  icon: '/brand/stat-jump-app-icon.svg',
   ogImage: '/og.png',
 
   // Brand colors. `accent` is used for buttons and highlights,
   // `accentText` for text sitting on top of the accent color.
   colors: {
-    accent: '#1d4ed8',
-    accentDark: '#60a5fa',
-    accentText: '#ffffff',
+    accent: '#347a1a',
+    accentDark: '#9be15d',
+    accentText: '#0b1b33',
   },
 
   // Store links. Leave a value empty ('') to hide that badge.
@@ -37,17 +37,13 @@ export const app = {
   },
 
   features: [
-    { icon: '🎥', title: 'Film it', body: 'Record your approach and jump with just your phone. Placeholder text.' },
-    { icon: '📐', title: 'See the mechanics', body: 'Approach speed, plant angles, arm swing and jump height, rep by rep. Placeholder text.' },
-    { icon: '📈', title: 'Jump higher', body: 'Get one clear fix to work on and track your progress over time. Placeholder text.' },
+    { icon: '01', title: 'Film one approach', body: 'Set your phone at the side of the court and record a single approach and jump.' },
+    { icon: '02', title: 'Get the numbers', body: 'Vertical, approach speed, penultimate step and plant angle, measured from the video.' },
+    { icon: '03', title: 'Find the next inch', body: 'One clear fix per session, and a log of every inch you gain.' },
   ],
 
   // Screenshots in public/screenshots/. Portrait phone shots work best (e.g. 1290x2796).
-  screenshots: [
-    { src: '/screenshots/1.svg', alt: 'Home screen' },
-    { src: '/screenshots/2.svg', alt: 'Detail screen' },
-    { src: '/screenshots/3.svg', alt: 'Settings screen' },
-  ],
+  screenshots: [] as { src: string; alt: string }[],
 
   faq: [
     {

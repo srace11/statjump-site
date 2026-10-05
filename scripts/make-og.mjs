@@ -15,22 +15,19 @@ const wrap = (text, max) => {
   return lines.slice(0, 3);
 };
 
-const iconPath = new URL(`../public${app.icon}`, import.meta.url);
-const icon = await sharp(await readFile(iconPath)).resize(180, 180).png().toBuffer();
-const tagline = wrap(app.tagline, 44)
-  .map((l, i) => `<tspan x="80" dy="${i === 0 ? 0 : 52}">${esc(l)}</tspan>`)
-  .join('');
+// Stat Jump: navy ground, reversed lockup, slogan in Volt (brand colours from the design system).
+const lockup = await sharp(await readFile(new URL('../public/brand/stat-jump-lockup-reverse.svg', import.meta.url)), { density: 300 })
+  .resize({ width: 760 }).png().toBuffer();
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-  <rect width="1200" height="630" fill="#0d0d10"/>
-  <rect x="0" y="600" width="1200" height="30" fill="${app.colors.accent}"/>
-  <text x="80" y="330" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" font-size="88" font-weight="700">${esc(app.name)}</text>
-  <text x="80" y="410" fill="#b4b4c2" font-family="Helvetica, Arial, sans-serif" font-size="40">${tagline}</text>
-  <text x="80" y="140" fill="${app.colors.accentDark}" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="700">${esc(new URL(app.url).host)}</text>
+  <rect width="1200" height="630" fill="#0b1b33"/>
+  <rect x="0" y="600" width="1200" height="30" fill="#9be15d"/>
+  <text x="80" y="470" fill="#9be15d" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="92" font-weight="800" font-style="italic">${esc(app.tagline.toUpperCase())}</text>
+  <text x="80" y="540" fill="#a9b6cc" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="30" font-weight="700">${esc(new URL(app.url).host)}</text>
 </svg>`;
 
 await sharp(Buffer.from(svg))
-  .composite([{ input: icon, left: 940, top: 90 }])
+  .composite([{ input: lockup, left: 80, top: 90 }])
   .png()
   .toFile(new URL('../public/og.png', import.meta.url).pathname);
 console.log('Wrote public/og.png');
