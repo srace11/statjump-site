@@ -1,0 +1,18 @@
+---
+// Stand-in for pages that aren't written yet. The template's originals are in
+// app-site-template (and src/policies/*.md here) for when they are.
+import Base from '../layouts/Base.astro';
+import { app } from '../app.config';
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<Base title={title} description={`${title} for ${app.name} is coming soon.`}>
+  <article class="wrap prose">
+    <h1>{title}</h1>
+    <p class="meta">Coming soon.</p>
+    <p><a href="/">Back to {app.name}</a></p>
+  </article>
+</Base>

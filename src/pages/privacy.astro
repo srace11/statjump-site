@@ -1,7 +1,4 @@
 ---
-import Policy from '../layouts/Policy.astro';
-import * as doc from '../policies/privacy.md';
+import ComingSoon from '../components/ComingSoon.astro';
 ---
-<Policy title="Privacy Policy" effectiveDate={doc.frontmatter.effectiveDate} hasTodos={doc.rawContent().includes('TODO')}>
-  <doc.Content />
-</Policy>
+<ComingSoon title="Privacy Policy" />
