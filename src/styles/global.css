@@ -10,6 +10,8 @@
   --navy: #0b1b33;
   --volt: #9be15d;
   --on-volt: #0b1b33;
+  --alert: #c62f2f;
+  --volt-soft: #eef9e3;
   --bg: #ffffff;
   --fg: #0b1b33;
   --muted: #51607a;
@@ -31,6 +33,8 @@
     --line: #24395e;
     --card: #12264a;
     --band: #12264a;
+    --alert: #ff7a7a;
+    --volt-soft: #1a3326;
     --accent: var(--brand-dark);
   }
 }

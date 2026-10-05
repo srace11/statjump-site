@@ -1,0 +1,12 @@
+---
+// Where a plain (no-JavaScript) form post lands after a successful signup.
+import Base from '../../layouts/Base.astro';
+import { app } from '../../app.config';
+---
+<Base title="You're on the list">
+  <article class="wrap prose">
+    <h1>You're on the list</h1>
+    <p>We'll email you when {app.name} launches.</p>
+    <p><a href="/">Back to {app.name}</a></p>
+  </article>
+</Base>

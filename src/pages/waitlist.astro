@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import WaitlistForm from '../components/WaitlistForm.astro';
+import { app } from '../app.config';
+---
+<Base title="Join the waitlist" description={`Join the ${app.name} waitlist and get one email when it launches.`}>
+  <article class="wrap waitlist-page">
+    <p class="eyebrow">Launching soon</p>
+    <h1>Join the waitlist</h1>
+    <p class="lead">Be first to measure your approach and jump. One email when we launch, nothing else.</p>
+    <div class="card">
+      <WaitlistForm app="statjump" />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .waitlist-page { max-width: 560px; padding-top: 48px; }
+  .eyebrow { font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+  h1 { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase;
+    font-size: clamp(2.6rem, 9vw, 3.4rem); line-height: .95; margin: 0 0 14px; }
+  .lead { color: var(--muted); font-size: 1.08rem; margin: 0 0 28px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+</style>

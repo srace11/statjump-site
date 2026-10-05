@@ -1,0 +1,146 @@
+---
+// Waitlist signup form. Its fields, copy and Turnstile site key come from the
+// waitlist API's config for this app, read once at build time.
+// Set WAITLIST_API=http://localhost:8787 to build against a local `wrangler dev`.
+interface Props {
+  app: string;
+}
+const { app } = Astro.props;
+
+interface Field {
+  name: string;
+  label: string;
+  type: 'select' | 'text';
+  options?: string[];
+  required: boolean;
+  maxLength?: number;
+}
+interface WaitlistConfig {
+  displayName: string;
+  buttonText: string;
+  successMessage: string;
+  privacyUrl: string;
+  fields: Field[];
+  action: string;
+  turnstileSiteKey: string;
+}
+
+const api = process.env.WAITLIST_API ?? 'https://api.shaneracey.com';
+const res = await fetch(`${api}/api/apps/${encodeURIComponent(app)}`);
+if (!res.ok) throw new Error(`WaitlistForm: ${api}/api/apps/${app} returned ${res.status}. Is "${app}" in the API's apps.config.ts?`);
+const cfg = (await res.json()) as WaitlistConfig;
+const privacyPath = new URL(cfg.privacyUrl).pathname;
+---
+<form class="waitlist" method="post" action={cfg.action} data-waitlist novalidate>
+  <div class="field">
+    <label for="wl-email">Email</label>
+    <input id="wl-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required />
+  </div>
+
+  {cfg.fields.map((f) => (
+    <div class="field">
+      <label for={`wl-${f.name}`}>{f.label}{!f.required && <span class="optional"> (optional)</span>}</label>
+      {f.type === 'select' ? (
+        <select id={`wl-${f.name}`} name={f.name} required={f.required}>
+          <option value="">Choose one</option>
+          {f.options?.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      ) : (
+        <input id={`wl-${f.name}`} name={f.name} type="text" maxlength={f.maxLength ?? 200} required={f.required} />
+      )}
+    </div>
+  ))}
+
+  <!-- Honeypot: hidden from people and screen readers. Bots that fill it are ignored. -->
+  <div class="hp" aria-hidden="true">
+    <label for="wl-website">Website</label>
+    <input id="wl-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="consent">
+    <input id="wl-consent" name="consent" type="checkbox" value="on" required />
+    <label for="wl-consent">
+      Email me about the {cfg.displayName} launch. I've read the <a href={privacyPath}>privacy notice</a>.
+    </label>
+  </div>
+
+  <div class="cf-turnstile" data-sitekey={cfg.turnstileSiteKey} data-theme="auto" data-size="flexible"></div>
+  <noscript><p class="note">Joining needs JavaScript turned on, for spam protection.</p></noscript>
+
+  <button type="submit">{cfg.buttonText}</button>
+  <p class="status" role="status" aria-live="polite" tabindex="-1" data-status></p>
+</form>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script define:vars={{ successMessage: cfg.successMessage }}>
+  const form = document.querySelector('[data-waitlist]');
+  const status = form.querySelector('[data-status]');
+  const button = form.querySelector('button[type="submit"]');
+
+  const show = (text, kind) => {
+    status.textContent = text;
+    status.dataset.kind = kind;
+  };
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    const data = Object.fromEntries(new FormData(form));
+    if (!data['cf-turnstile-response']) {
+      show('Please wait for the spam check to finish, then try again.', 'error');
+      return;
+    }
+    data.consent = form.consent.checked;
+    button.disabled = true;
+    show('Sending...', 'pending');
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (res.ok && body.ok) {
+        form.querySelectorAll('.field, .consent, .cf-turnstile, button').forEach((el) => (el.hidden = true));
+        show(body.message || successMessage, 'success');
+        status.focus();
+        return;
+      }
+      show(body.message || 'Something went wrong. Please try again.', 'error');
+    } catch {
+      show('Could not reach the server. Check your connection and try again.', 'error');
+    }
+    button.disabled = false;
+    window.turnstile?.reset();
+  });
+</script>
+
+<style>
+  .waitlist { display: grid; gap: 16px; }
+  .waitlist [hidden] { display: none; }
+  .field { display: grid; gap: 6px; }
+  label { font-weight: 600; font-size: .95rem; }
+  .optional { font-weight: 400; color: var(--muted); }
+  input[type='email'], input[type='text'], select {
+    font: inherit; color: var(--fg); background: var(--bg); width: 100%;
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 11px 12px; min-height: 46px;
+  }
+  input:focus-visible, select:focus-visible, button:focus-visible, .consent input:focus-visible {
+    outline: 3px solid var(--accent); outline-offset: 2px;
+  }
+  .consent { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+  .consent input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--accent); }
+  .consent label { font-weight: 400; font-size: .92rem; color: var(--muted); }
+  .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  button {
+    font: inherit; font-weight: 600; font-size: 1rem; cursor: pointer; min-height: 48px;
+    background: var(--volt); color: var(--on-volt); border: 0; border-radius: var(--radius); padding: 12px 20px;
+  }
+  button:disabled { opacity: .6; cursor: progress; }
+  .status { margin: 0; min-height: 1.5em; }
+  .status:empty { display: none; }
+  .status[data-kind='error'] { color: var(--alert); }
+  .status[data-kind='success'] { font-weight: 600; color: var(--fg); background: var(--volt-soft);
+    border-radius: var(--radius); padding: 14px 16px; }
+  .note { margin: 0; color: var(--muted); font-size: .92rem; }
+</style>

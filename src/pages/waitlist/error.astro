@@ -1,0 +1,11 @@
+---
+// Where a plain (no-JavaScript) form post lands when the signup was refused.
+import Base from '../../layouts/Base.astro';
+---
+<Base title="That didn't go through">
+  <article class="wrap prose">
+    <h1>That didn't go through</h1>
+    <p>Your signup wasn't saved. The waitlist uses a quick spam check that needs JavaScript, so please make sure it's turned on.</p>
+    <p><a href="/waitlist">Try again</a></p>
+  </article>
+</Base>

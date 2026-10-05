@@ -6,12 +6,19 @@ import { app } from '../app.config';
 <Base>
   <section class="hero">
     <div class="wrap hero-in">
-      <h1>
-        <img src="/brand/stat-jump-lockup-reverse.svg" alt={`${app.name} Volleyball`} width="477" height="93" />
-      </h1>
-      <p class="slogan">{app.tagline}</p>
-      <p class="lead">{app.description}</p>
-      <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+      <div class="hero-copy">
+        <h1>
+          <img src="/brand/stat-jump-lockup-reverse.svg" alt={`${app.name} Volleyball`} width="477" height="93" />
+        </h1>
+        <p class="slogan">{app.tagline}</p>
+        <p class="lead">{app.description}</p>
+        <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+      </div>
+      <aside class="hero-join" aria-label="Waitlist">
+        <p class="join-label">Launching soon</p>
+        <p class="join-text">Get one email when {app.name} launches.</p>
+        <a class="join-button" href="/waitlist">Join the waitlist</a>
+      </aside>
     </div>
   </section>
 
@@ -37,6 +44,7 @@ import { app } from '../app.config';
 
   <section class="wrap cta">
     <h2>Get {app.name}</h2>
+    <a class="join-button" href="/waitlist">Join the waitlist</a>
     <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
   </section>
 </Base>
@@ -44,9 +52,22 @@ import { app } from '../app.config';
 <style>
   /* Navy band with Volt: the brand's loudest look. Volt is text-safe on navy only. */
   .hero { background: var(--band); color: #fff; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%); }
-  .hero-in { padding: 64px 20px 104px; display: flex; flex-direction: column; align-items: flex-start; }
+  .hero-in { padding: 64px 20px 104px; display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 880px) { .hero-in { grid-template-columns: 1fr 300px; gap: 56px; } }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; }
   .hero h1 { margin: 0 0 28px; }
   .hero h1 img { width: min(420px, 100%); height: auto; }
+  .hero-join { background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: var(--radius); padding: 24px; }
+  .join-label { font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--volt); margin: 0 0 6px; }
+  .join-text { margin: 0 0 18px; color: #d5deea; }
+  .join-button { display: flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 22px;
+    background: var(--volt); color: var(--on-volt); border-radius: var(--radius); font-weight: 600; font-size: 1.05rem;
+    text-decoration: none; }
+  .join-button:hover { filter: brightness(1.06); }
+  .join-button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  .cta .join-button { width: min(300px, 100%); }
+  .cta .join-button:focus-visible { outline-color: var(--accent); }
   .slogan { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase;
     font-size: clamp(3rem, 11vw, 4.5rem); line-height: .95; letter-spacing: -.01em; color: var(--volt); margin: 0 0 20px; }
   .lead { font-size: clamp(1.05rem, 3.2vw, 1.25rem); color: #d5deea; max-width: 34rem; margin: 0 0 32px; }
