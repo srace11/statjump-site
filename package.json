@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
+    "@mediapipe/tasks-vision": "1.0.1",
     "astro": "^7.3.5",
+    "mp4box": "2.4.1",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
+    "vitest": "5.0.3",
     "wrangler": "^4.146.0"
   }
 }

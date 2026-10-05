@@ -18,7 +18,6 @@ export const app = {
   // Support contact. This address is published on the support, privacy and terms pages.
   contactEmail: '', // Not published yet. Set it before restoring the support and terms pages.
   // Shown only on the privacy notice, for deletion requests.
-  // TODO: confirm this address receives mail (a Google Workspace alias) before sharing the waitlist.
   privacyEmail: 'hello@shaneracey.com',
 
   // Images in public/. Replace the files or point these at new ones.
