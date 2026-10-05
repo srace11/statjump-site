@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import StoreBadges from '../components/StoreBadges.astro';
+import Analyzer from '../components/Analyzer.astro';
 import { app } from '../app.config';
 ---
 <Base>
@@ -21,6 +22,8 @@ import { app } from '../app.config';
       </aside>
     </div>
   </section>
+
+  <Analyzer />
 
   <section class="wrap features" aria-label="How it works">
     {app.features.map((f) => (

@@ -7,6 +7,5 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'never',
   build: { format: 'file' },
-  // The analyzer is an unlisted test tool for now.
-  integrations: [sitemap({ filter: (page) => !page.includes('/analyze') })],
+  integrations: [sitemap()],
 });

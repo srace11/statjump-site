@@ -1,0 +1,450 @@
+---
+// On-device jump analyzer, shown on the landing page under the hero.
+import { LEVELS, NET_HEIGHTS } from '../analyzer/profile';
+import { METRICS } from '../analyzer/rubric';
+---
+<section id="analyze" class="wrap az" aria-label="Analyze a jump">
+  <p class="az-eyebrow">Test lab · v0.1</p>
+  <h2>Analyze a jump</h2>
+  <p class="az-lead">Upload a side-on video of one spike approach. The video never leaves your device.</p>
+
+  <form id="profile" class="az-card" novalidate>
+    <h3>Athlete</h3>
+    <div class="az-grid">
+      <fieldset class="az-span">
+        <legend>Units</legend>
+        <label class="az-inline"><input type="radio" name="units" value="imperial" checked /> ft / in</label>
+        <label class="az-inline"><input type="radio" name="units" value="metric" /> cm</label>
+      </fieldset>
+
+      <div>
+        <span class="az-label">Height</span>
+        <div class="az-imperial az-pair">
+          <label><input name="heightFt" type="number" min="3" max="8" inputmode="numeric" /> ft</label>
+          <label><input name="heightIn" type="number" min="0" max="11.9" step="0.5" inputmode="decimal" /> in</label>
+        </div>
+        <div class="az-metric az-pair" hidden>
+          <label><input name="heightCm" type="number" min="100" max="240" inputmode="decimal" /> cm</label>
+        </div>
+      </div>
+
+      <div>
+        <span class="az-label">Standing reach</span>
+        <div class="az-imperial az-pair">
+          <label><input name="reachFt" type="number" min="4" max="11" inputmode="numeric" /> ft</label>
+          <label><input name="reachIn" type="number" min="0" max="11.9" step="0.5" inputmode="decimal" /> in</label>
+        </div>
+        <div class="az-metric az-pair" hidden>
+          <label><input name="reachCm" type="number" min="130" max="330" inputmode="decimal" /> cm</label>
+        </div>
+        <label class="az-inline az-small"><input type="checkbox" name="reachUnknown" /> I don't know (we'll estimate it)</label>
+      </div>
+
+      <label>
+        <span class="az-label">Scoring norms</span>
+        <select name="norms">
+          <option value="men">Men's</option>
+          <option value="women">Women's</option>
+        </select>
+      </label>
+
+      <label>
+        <span class="az-label">Level</span>
+        <select name="level">
+          {Object.entries(LEVELS).map(([id, l]) => <option value={id} selected={id === 'highSchool'}>{l.label}</option>)}
+        </select>
+      </label>
+
+      <label>
+        <span class="az-label">Hitting hand</span>
+        <select name="hand">
+          <option value="right">Right</option>
+          <option value="left">Left</option>
+          <option value="unknown">Not sure</option>
+        </select>
+      </label>
+
+      <label>
+        <span class="az-label">Net height</span>
+        <select name="net">
+          {Object.entries(NET_HEIGHTS).map(([id, n]) => <option value={id}>{n.label} · {n.imperial} ({n.heightM.toFixed(2)}m)</option>)}
+        </select>
+      </label>
+    </div>
+    <p id="profile-error" class="az-error" hidden></p>
+  </form>
+
+  <section class="az-card">
+    <h3>Video</h3>
+    <details class="az-tips">
+      <summary>How to film it</summary>
+      <ul>
+        <li>Stand beside the approach path, 10–15 ft away, with the phone at head height.</li>
+        <li>Use the 0.5x lens so the full jump fits. Landscape or portrait both work.</li>
+        <li>Record at 60fps (Settings › Camera › Record Video on iPhone). No slo-mo for now.</li>
+        <li>Hold still. Don't follow the athlete. One approach and jump per video.</li>
+      </ul>
+    </details>
+    <input id="file" type="file" accept="video/mp4,video/quicktime,.mp4,.mov" />
+    <button id="run" class="az-button" type="button" disabled>Analyze</button>
+    <p id="status" class="az-status" aria-live="polite"></p>
+    <progress id="progress" max="1" value="0" hidden></progress>
+    <p id="run-error" class="az-error" hidden></p>
+  </section>
+
+  <section id="results" class="az-card" hidden>
+    <h3>Results</h3>
+    <ul id="issues" class="az-issues"></ul>
+
+    <div id="stage" class="az-stage">
+      <video id="video" playsinline muted preload="auto"></video>
+      <canvas id="overlay"></canvas>
+    </div>
+    <div class="az-controls">
+      <button type="button" class="az-button az-ghost" id="prev" aria-label="Previous frame">‹ Frame</button>
+      <button type="button" class="az-button" id="play">Play</button>
+      <button type="button" class="az-button az-ghost" id="next" aria-label="Next frame">Frame ›</button>
+      <label class="az-small">Speed
+        <select id="rate">
+          <option value="0.25" selected>0.25×</option>
+          <option value="0.5">0.5×</option>
+          <option value="1">1×</option>
+        </select>
+      </label>
+      <span id="frame-label" class="az-mono az-small"></span>
+    </div>
+
+    <h4>Scores</h4>
+    <p class="az-small az-muted">Measured in the next build. The skeleton above is what they'll be computed from.</p>
+    <ul class="az-metrics">
+      {METRICS.map((m) => (
+        <li><span>{m.label}</span><span class="az-mono az-muted">–/10</span></li>
+      ))}
+      <li class="az-overall"><span>Overall</span><span class="az-mono az-muted">–/10</span></li>
+    </ul>
+
+    <h4>Video check</h4>
+    <dl id="summary" class="az-summary"></dl>
+    <button id="download" class="az-button az-ghost" type="button">Download pose data (JSON)</button>
+  </section>
+</section>
+
+
+<script>
+  // The pipeline pulls in MediaPipe, so it's loaded on first use, not with the landing page.
+  import type { AnalysisRun } from '../analyzer/pipeline';
+  import { feetInchesToMeters, standingReach, type Profile } from '../analyzer/profile';
+
+  const STORAGE_KEY = 'statjump.profile';
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const form = $<HTMLFormElement>('profile');
+  const fileInput = $<HTMLInputElement>('file');
+  const runButton = $<HTMLButtonElement>('run');
+  const status = $('status');
+  const progress = $<HTMLProgressElement>('progress');
+  const runError = $('run-error');
+  const profileError = $('profile-error');
+  const results = $('results');
+  const video = $<HTMLVideoElement>('video');
+  const overlay = $<HTMLCanvasElement>('overlay');
+  const stage = $('stage');
+  const frameLabel = $('frame-label');
+  const playButton = $<HTMLButtonElement>('play');
+
+  let run: AnalysisRun | null = null;
+  let videoUrl: string | null = null;
+  let connections: readonly (readonly [number, number])[] = [];
+
+  // ---- Profile ----------------------------------------------------------
+
+  const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement;
+  const num = (name: string) => {
+    const v = field(name).value.trim();
+    return v === '' ? NaN : Number(v);
+  };
+
+  function syncUnits() {
+    const metric = (form.elements.namedItem('units') as RadioNodeList).value === 'metric';
+    form.querySelectorAll<HTMLElement>('.az-imperial').forEach((el) => (el.hidden = metric));
+    form.querySelectorAll<HTMLElement>('.az-metric').forEach((el) => (el.hidden = !metric));
+    const unknown = (field('reachUnknown') as HTMLInputElement).checked;
+    for (const n of ['reachFt', 'reachIn', 'reachCm']) (field(n) as HTMLInputElement).disabled = unknown;
+  }
+
+  function readProfile(): Profile | string {
+    const metric = (form.elements.namedItem('units') as RadioNodeList).value === 'metric';
+    const height = metric ? num('heightCm') / 100 : feetInchesToMeters(num('heightFt'), num('heightIn') || 0);
+    if (!(height >= 1.2 && height <= 2.3)) return 'Enter a height between 4 ft and 7 ft 6 in (120–230 cm).';
+
+    let reach: number | null = null;
+    if (!(field('reachUnknown') as HTMLInputElement).checked) {
+      reach = metric ? num('reachCm') / 100 : feetInchesToMeters(num('reachFt'), num('reachIn') || 0);
+      if (!Number.isFinite(reach)) return 'Enter a standing reach, or tick "I don\'t know".';
+      if (reach < height * 1.15 || reach > height * 1.5) return 'That standing reach looks off for that height. Check both numbers.';
+    }
+    return {
+      heightM: height,
+      standingReachM: reach,
+      norms: field('norms').value as Profile['norms'],
+      level: field('level').value as Profile['level'],
+      hand: field('hand').value as Profile['hand'],
+      net: field('net').value as Profile['net'],
+    };
+  }
+
+  function saveForm() {
+    const data: Record<string, string | boolean> = {};
+    for (const el of Array.from(form.elements) as HTMLInputElement[]) {
+      if (!el.name) continue;
+      if (el.type === 'radio') { if (el.checked) data[el.name] = el.value; }
+      else data[el.name] = el.type === 'checkbox' ? el.checked : el.value;
+    }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* storage unavailable */ }
+  }
+
+  function restoreForm() {
+    let data: Record<string, string | boolean> = {};
+    try { data = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}'); } catch { /* ignore */ }
+    for (const el of Array.from(form.elements) as HTMLInputElement[]) {
+      if (!el.name || !(el.name in data)) continue;
+      if (el.type === 'radio') el.checked = el.value === data[el.name];
+      else if (el.type === 'checkbox') el.checked = data[el.name] === true;
+      else el.value = String(data[el.name]);
+    }
+  }
+
+  restoreForm();
+  syncUnits();
+  form.addEventListener('input', () => { syncUnits(); saveForm(); profileError.hidden = true; });
+  form.addEventListener('submit', (e) => e.preventDefault());
+
+  // ---- Running the analysis ---------------------------------------------
+
+  const supported = 'VideoDecoder' in window && 'crypto' in window && !!crypto.subtle;
+  if (!supported) {
+    status.textContent = 'This browser can\'t run the analyzer. Use a recent Chrome, Edge or Safari.';
+  }
+  fileInput.addEventListener('change', () => { runButton.disabled = !supported || !fileInput.files?.length; });
+
+  function showError(el: HTMLElement, message: string) {
+    el.textContent = message;
+    el.hidden = false;
+  }
+
+  runButton.addEventListener('click', async () => {
+    const profile = readProfile();
+    if (typeof profile === 'string') return showError(profileError, profile);
+    const file = fileInput.files?.[0];
+    if (!file) return;
+
+    runButton.disabled = true;
+    runError.hidden = true;
+    results.hidden = true;
+    progress.hidden = false;
+    progress.removeAttribute('value');
+
+    try {
+      status.textContent = 'Loading the analyzer…';
+      const [{ analyzeVideo }, { POSE_CONNECTIONS }] = await Promise.all([
+        import('../analyzer/pipeline'),
+        import('../analyzer/pose'),
+      ]);
+      connections = POSE_CONNECTIONS;
+      run = await analyzeVideo(file, (p) => {
+        if (p.stage === 'reading') status.textContent = 'Reading the video…';
+        else if (p.stage === 'loadingModel') status.textContent = 'Loading the pose model…';
+        if (p.stage === 'analyzing') {
+          status.textContent = `Finding the athlete: frame ${p.done} of ${p.total}`;
+          progress.value = p.done / p.total;
+        }
+      });
+      status.textContent = '';
+      showResults(file, profile, run);
+    } catch (e) {
+      status.textContent = '';
+      showError(runError, e instanceof Error ? e.message : String(e));
+    } finally {
+      progress.hidden = true;
+      runButton.disabled = false;
+    }
+  });
+
+  // ---- Results ------------------------------------------------------------
+
+  function showResults(file: File, profile: Profile, r: AnalysisRun) {
+    const issues = $('issues');
+    issues.replaceChildren(
+      ...r.quality.blockers.map((t) => Object.assign(document.createElement('li'), { className: 'az-blocker', textContent: t })),
+      ...r.quality.warnings.map((t) => Object.assign(document.createElement('li'), { className: 'az-warning', textContent: t })),
+    );
+
+    const reach = standingReach(profile);
+    const rows: [string, string][] = [
+      ['File', `${r.video.name} (${(r.video.sizeBytes / 1e6).toFixed(1)} MB)`],
+      ['Video ID', r.video.sha256.slice(0, 16)],
+      ['Size', `${r.video.width}×${r.video.height}, ${r.video.width >= r.video.height ? 'landscape' : 'portrait'}`],
+      ['Codec', r.video.codec],
+      ['Frame rate', `${r.quality.frameRate.median.toFixed(1)} fps`],
+      ['Length', `${r.video.durationS.toFixed(2)} s, ${r.frames.length} frames`],
+      ['Athlete found', `${Math.round(r.quality.detectedShare * 100)}% of frames`],
+      ['Standing reach', `${reach.meters.toFixed(2)} m${reach.estimated ? ' (estimated)' : ''}`],
+      ['Versions', `analyzer ${r.versions.analyzer} · rubric ${r.versions.rubric} · MediaPipe ${r.versions.mediapipe}`],
+    ];
+    $('summary').replaceChildren(...rows.flatMap(([k, v]) => [
+      Object.assign(document.createElement('dt'), { textContent: k }),
+      Object.assign(document.createElement('dd'), { textContent: v }),
+    ]));
+
+    if (videoUrl) URL.revokeObjectURL(videoUrl);
+    videoUrl = URL.createObjectURL(file);
+    video.src = videoUrl;
+    video.playbackRate = Number(($<HTMLSelectElement>('rate')).value);
+    stage.style.aspectRatio = `${r.video.width} / ${r.video.height}`;
+    stage.style.maxWidth = `calc(70vh * ${r.video.width / r.video.height})`;
+    results.hidden = false;
+    video.addEventListener('loadeddata', () => drawAt(video.currentTime), { once: true });
+  }
+
+  /** Index of the analyzed frame nearest to a playback time. */
+  function frameAt(seconds: number): number {
+    const frames = run!.frames;
+    const t = seconds * 1000;
+    let lo = 0, hi = frames.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (frames[mid].timeMs < t) lo = mid + 1; else hi = mid;
+    }
+    if (lo > 0 && t - frames[lo - 1].timeMs < frames[lo].timeMs - t) lo--;
+    return lo;
+  }
+
+  function drawAt(seconds: number) {
+    if (!run) return;
+    const rect = stage.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    overlay.width = Math.round(rect.width * dpr);
+    overlay.height = Math.round(rect.height * dpr);
+    const ctx = overlay.getContext('2d')!;
+    ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+    const i = frameAt(seconds);
+    const f = run.frames[i];
+    frameLabel.textContent = `Frame ${i + 1}/${run.frames.length} · ${(f.timeMs / 1000).toFixed(3)} s${f.people > 1 ? ` · ${f.people} people` : ''}`;
+    if (!f.athlete) return;
+
+    const pts = f.athlete.map(([x, y, , v]) => [x * overlay.width, y * overlay.height, v] as const);
+    ctx.lineWidth = 3 * dpr;
+    ctx.lineCap = 'round';
+    for (const [a, b] of connections) {
+      ctx.strokeStyle = Math.min(pts[a][2], pts[b][2]) < 0.5 ? 'rgba(155,225,93,.35)' : '#9be15d';
+      ctx.beginPath();
+      ctx.moveTo(pts[a][0], pts[a][1]);
+      ctx.lineTo(pts[b][0], pts[b][1]);
+      ctx.stroke();
+    }
+    for (const [x, y, v] of pts) {
+      ctx.fillStyle = v < 0.5 ? 'rgba(255,255,255,.35)' : '#ffffff';
+      ctx.beginPath();
+      ctx.arc(x, y, 3.5 * dpr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Redraw on every displayed frame when the browser supports it, else every animation frame.
+  if ('requestVideoFrameCallback' in HTMLVideoElement.prototype) {
+    const onFrame = (_now: number, meta: VideoFrameCallbackMetadata) => {
+      drawAt(meta.mediaTime);
+      video.requestVideoFrameCallback(onFrame);
+    };
+    video.requestVideoFrameCallback(onFrame);
+  } else {
+    const loop = () => { if (!video.paused) drawAt(video.currentTime); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+  video.addEventListener('seeked', () => drawAt(video.currentTime));
+  window.addEventListener('resize', () => drawAt(video.currentTime));
+
+  function step(delta: number) {
+    if (!run) return;
+    video.pause();
+    const i = Math.min(run.frames.length - 1, Math.max(0, frameAt(video.currentTime) + delta));
+    // Aim slightly past the frame start so the browser lands on this frame, not the one before.
+    video.currentTime = run.frames[i].timeMs / 1000 + 0.001;
+  }
+  $('prev').addEventListener('click', () => step(-1));
+  $('next').addEventListener('click', () => step(1));
+  playButton.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
+  video.addEventListener('play', () => (playButton.textContent = 'Pause'));
+  video.addEventListener('pause', () => (playButton.textContent = 'Play'));
+  $<HTMLSelectElement>('rate').addEventListener('change', (e) => {
+    video.playbackRate = Number((e.target as HTMLSelectElement).value);
+  });
+
+  $('download').addEventListener('click', () => {
+    if (!run) return;
+    const blob = new Blob([JSON.stringify(run)], { type: 'application/json' });
+    const a = Object.assign(document.createElement('a'), {
+      href: URL.createObjectURL(blob),
+      download: `statjump-${run.video.sha256.slice(0, 8)}-v${run.versions.analyzer}.json`,
+    });
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+</script>
+
+<style is:global>
+  /* Classes below set display, which would otherwise override the hidden attribute. */
+  .az [hidden] { display: none !important; }
+  .az { max-width: 760px; padding-top: 48px; }
+  .az > h2 { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase;
+    font-size: clamp(2.6rem, 9vw, 3.4rem); line-height: .95; margin: 0 0 14px; }
+  .az h3 { font-size: 1.15rem; margin: 0 0 16px; }
+  .az h4 { font-size: 1rem; margin: 28px 0 8px; }
+  .az-eyebrow { font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+  .az-lead { color: var(--muted); font-size: 1.08rem; margin: 0 0 28px; }
+  .az-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+  .az-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px 20px; }
+  .az-span { grid-column: 1 / -1; }
+  .az fieldset { border: 0; padding: 0; margin: 0; display: flex; gap: 18px; flex-wrap: wrap; }
+  .az legend, .az-label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: 6px; }
+  .az fieldset legend { width: 100%; }
+  .az input[type='number'], .az select {
+    font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line);
+    border-radius: 8px; padding: 8px 10px; width: 100%; min-height: 42px;
+  }
+  .az-pair { display: flex; gap: 10px; }
+  .az-pair label { display: flex; align-items: center; gap: 6px; flex: 1; font-size: .9rem; color: var(--muted); }
+  .az-inline { display: inline-flex; align-items: center; gap: 6px; }
+  .az-small { font-size: .85rem; }
+  .az-muted { color: var(--muted); }
+  .az-mono { font-family: var(--font-mono); }
+  .az-pair + .az-inline { margin-top: 8px; }
+  .az input:disabled { opacity: .5; }
+  .az input[type='file'] { display: block; margin: 14px 0; max-width: 100%; }
+  .az-button {
+    font: inherit; font-weight: 600; cursor: pointer; border: 0; border-radius: 10px;
+    padding: 10px 18px; min-height: 44px; background: var(--volt); color: var(--on-volt);
+  }
+  .az-button:disabled { opacity: .45; cursor: not-allowed; }
+  .az-ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+  .az-status { color: var(--muted); margin: 12px 0 6px; min-height: 1.6em; }
+  .az progress { width: 100%; accent-color: var(--accent); }
+  .az-error { color: var(--alert); margin: 12px 0 0; }
+  .az-tips { margin-bottom: 4px; color: var(--muted); }
+  .az-tips summary { cursor: pointer; color: var(--fg); font-weight: 600; }
+  .az-issues { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; }
+  .az-issues li { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); }
+  .az-blocker { border-color: var(--alert) !important; color: var(--alert); }
+  .az-warning::before { content: '⚠ '; }
+  .az-stage { position: relative; width: 100%; margin: 0 auto; background: #000; border-radius: 8px; overflow: hidden; }
+  .az-stage video, .az-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .az-stage canvas { pointer-events: none; }
+  .az-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+  .az-controls select { width: auto; min-height: 36px; padding: 4px 8px; margin-left: 4px; }
+  .az-metrics { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+  .az-metrics li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .az-overall { font-weight: 600; }
+  .az-summary { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0 0 18px; font-size: .92rem; }
+  .az-summary dt { color: var(--muted); }
+  .az-summary dd { margin: 0; overflow-wrap: anywhere; }
+</style>
