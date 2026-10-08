@@ -29,7 +29,8 @@ export async function createPoseLandmarker(): Promise<PoseLandmarker> {
     // CPU gives the same output run after run; GPU results can vary slightly.
     baseOptions: { modelAssetBuffer: model, delegate: 'CPU' },
     runningMode: 'VIDEO',
-    numPoses: 3,
+    // Enough for a hitter plus setter, blockers and people walking past.
+    numPoses: 4,
     minPoseDetectionConfidence: 0.5,
     minPosePresenceConfidence: 0.5,
     minTrackingConfidence: 0.5,

@@ -4,10 +4,10 @@
 import { createPoseLandmarker, MEDIAPIPE_VERSION, POSE_MODEL, sha256Hex } from './pose';
 import { assessQuality, type QualityReport } from './quality';
 import { RUBRIC_VERSION } from './rubric';
-import { pickSubject, type Skeleton } from './subject';
+import { athleteFrames, autoSelect, type Selection, type Skeleton } from './tracking';
 import { decodeFrames, demux, drawUpright, type VideoInfo } from './video';
 
-export const ANALYZER_VERSION = '0.1.0';
+export const ANALYZER_VERSION = '0.2.0';
 
 /** Long edge of the image passed to the pose model. Changing it changes results: bump ANALYZER_VERSION. */
 const POSE_INPUT_MAX_EDGE = 1280;
@@ -16,10 +16,8 @@ export interface PoseFrame {
   index: number;
   /** Milliseconds from the first frame, from the container timestamps. */
   timeMs: number;
-  /** The athlete's 33 landmarks, or null if no one was detected. */
-  athlete: Skeleton | null;
-  /** How many people were detected in this frame. */
-  people: number;
+  /** Everyone detected in this frame, 33 landmarks each, in detector order. */
+  people: Skeleton[];
 }
 
 export interface AnalysisRun {
@@ -33,6 +31,8 @@ export interface AnalysisRun {
   video: VideoInfo & { name: string; sizeBytes: number; sha256: string };
   quality: QualityReport;
   frames: PoseFrame[];
+  /** Who the athlete is. Part of the result: re-scoring must reuse it. */
+  selection: Selection | null;
 }
 
 export type Progress =
@@ -49,7 +49,6 @@ export async function analyzeVideo(file: File, onProgress: (p: Progress) => void
 
   const canvas = document.createElement('canvas');
   const frames: PoseFrame[] = [];
-  let previous: Skeleton | null = null;
   let lastTimeMs = -1;
 
   try {
@@ -66,10 +65,7 @@ export async function analyzeVideo(file: File, onProgress: (p: Progress) => void
 
       const result = landmarker.detectForVideo(canvas, timeMs);
       const people: Skeleton[] = result.landmarks.map((pose) => pose.map((l) => [l.x, l.y, l.z, l.visibility]));
-      const pick = pickSubject(people, previous);
-      const athlete = pick >= 0 ? people[pick] : null;
-      if (athlete) previous = athlete;
-      frames.push({ index: frames.length, timeMs, athlete, people: people.length });
+      frames.push({ index: frames.length, timeMs, people });
 
       onProgress({ stage: 'analyzing', done: frames.length, total: demuxed.info.frameCount });
       // Let the page repaint between frames.
@@ -79,7 +75,7 @@ export async function analyzeVideo(file: File, onProgress: (p: Progress) => void
     landmarker.close();
   }
 
-  const detected = frames.filter((f) => f.athlete).length;
+  const selection = autoSelect(frames, demuxed.info.width / demuxed.info.height);
   return {
     versions: {
       analyzer: ANALYZER_VERSION,
@@ -89,7 +85,8 @@ export async function analyzeVideo(file: File, onProgress: (p: Progress) => void
       mediapipe: MEDIAPIPE_VERSION,
     },
     video: { ...demuxed.info, name: file.name, sizeBytes: file.size, sha256 },
-    quality: assessQuality(frames.map((f) => f.timeMs), detected, demuxed.info.durationS),
+    quality: assessQuality(frames.map((f) => f.timeMs), athleteFrames(selection), demuxed.info.durationS),
     frames,
+    selection,
   };
 }

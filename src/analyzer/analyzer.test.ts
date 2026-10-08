@@ -2,12 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { MEDIAPIPE_VERSION } from './pose';
 import { assessQuality, frameRate } from './quality';
-import { pickSubject, type Skeleton } from './subject';
 import { rotationFromMatrix } from './video';
-
-function person(hipX: number, hipY: number, size: number): Skeleton {
-  return Array.from({ length: 33 }, (_, i) => [hipX + (i % 2 ? size : -size) / 2, hipY + (i % 3 ? size : -size) / 2, 0, 1]);
-}
 
 describe('versions', () => {
   it('MEDIAPIPE_VERSION matches the pinned dependency', () => {
@@ -26,19 +21,6 @@ describe('rotationFromMatrix', () => {
   });
   it('handles unsigned storage of negative values', () => {
     expect(rotationFromMatrix(new Uint32Array([0, 65536, 0, 0xffff0000, 0, 0, 0, 0, 1 << 30]))).toBe(90);
-  });
-});
-
-describe('pickSubject', () => {
-  it('starts with the largest person', () => {
-    expect(pickSubject([person(0.2, 0.5, 0.1), person(0.6, 0.5, 0.4)], null)).toBe(1);
-  });
-  it('then follows the athlete even when someone larger appears', () => {
-    const prev = person(0.3, 0.5, 0.2);
-    expect(pickSubject([person(0.8, 0.5, 0.5), person(0.32, 0.5, 0.2)], prev)).toBe(1);
-  });
-  it('returns -1 when no one is detected', () => {
-    expect(pickSubject([], null)).toBe(-1);
   });
 });
 

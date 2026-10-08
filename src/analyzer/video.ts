@@ -44,6 +44,15 @@ function codecDescription(entry: VisualSampleEntry): Uint8Array | undefined {
   return new Uint8Array(stream.buffer, 8); // skip the box header
 }
 
+function samplesDuration(samples: Sample[]): number {
+  let start = Infinity, end = -Infinity;
+  for (const s of samples) {
+    start = Math.min(start, s.cts / s.timescale);
+    end = Math.max(end, (s.cts + s.duration) / s.timescale);
+  }
+  return end - start;
+}
+
 /** Parses the whole file at once. Throws if there's no readable video track. */
 export function demux(buffer: ArrayBuffer): Demuxed {
   const file = createFile();
@@ -81,7 +90,8 @@ export function demux(buffer: ArrayBuffer): Demuxed {
       width: swap ? codedHeight : codedWidth,
       height: swap ? codedWidth : codedHeight,
       frameCount: samples.length,
-      durationS: track.duration / track.timescale,
+      // From the samples, not the header: recorded (fragmented) files can leave the header duration at 0.
+      durationS: samplesDuration(samples),
     },
     config: { codec: track.codec, codedWidth, codedHeight, description: codecDescription(entry) },
     samples,
