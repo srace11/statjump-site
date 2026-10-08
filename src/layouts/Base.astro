@@ -5,11 +5,9 @@ import { app } from '../app.config';
 interface Props {
   title?: string;
   description?: string;
-  /** Keeps the page out of search results (unlisted pages). */
-  noindex?: boolean;
 }
 
-const { title, description = app.description, noindex = false } = Astro.props;
+const { title, description = app.description } = Astro.props;
 const pageTitle = title ? `${title} | ${app.name}` : `${app.name}: ${app.tagline}`;
 // build.format 'file' makes pathname end in .html (/index.html, /privacy.html);
 // strip that so links and the canonical match the served URLs (/, /privacy).
@@ -31,7 +29,6 @@ const brandVars = `--brand:${app.colors.accent};--brand-dark:${app.colors.accent
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href={app.icon} />
     <link rel="apple-touch-icon" href={app.icon} />
     <link rel="sitemap" href="/sitemap-index.xml" />

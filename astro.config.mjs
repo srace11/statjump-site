@@ -7,6 +7,5 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'never',
   build: { format: 'file' },
-  // Unlisted pages (prefixed lab-) stay out of the sitemap.
-  integrations: [sitemap({ filter: (page) => !page.includes('/lab-') })],
+  integrations: [sitemap()],
 });

@@ -4,25 +4,17 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/copy-mediapipe.mjs",
     "dev": "astro dev",
-    "prebuild": "node scripts/copy-mediapipe.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "vitest run",
     "og": "node scripts/make-og.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
-    "@mediapipe/tasks-vision": "1.0.1",
     "astro": "^7.3.5",
-    "mp4box": "2.4.1",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
-    "typescript": "^6.0.3",
-    "vitest": "5.0.3",
     "wrangler": "^4.146.0"
   }
 }
