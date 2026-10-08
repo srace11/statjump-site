@@ -80,10 +80,12 @@ const faq = [
       <a class="button" href="/waitlist">Join the waitlist</a>
       <p class="note">Free to join. One email when we launch.</p>
 
-      <div class="video ph-frame" role="img" aria-label="How it works video, coming soon">
-        <span class="play" aria-hidden="true"></span>
-        <span class="ph">[How it works video]</span>
-      </div>
+    </div>
+
+    <!-- Starts as an inset rounded card and grows to the full page width as you scroll (script below). -->
+    <div class="video ph-frame" data-grow role="img" aria-label="How it works video, coming soon">
+      <span class="play" aria-hidden="true"></span>
+      <span class="ph">[How it works video]</span>
     </div>
   </section>
 
@@ -111,17 +113,27 @@ const faq = [
   </section>
 
   <!-- What it measures -->
-  <section id="measures" class="section wrap">
-    <p class="eyebrow">What it measures</p>
-    <h2>Seven scores from one approach</h2>
-    <p class="section-lead">Each part is scored out of 10 and rolled into an overall score.</p>
-    <div class="metrics">
-      {metrics.map((m) => (
-        <div class="card metric">
-          <h3>{m.name}</h3>
-          <p>{m.body}</p>
-        </div>
-      ))}
+  <section id="measures" class="section">
+    <div class="wrap head">
+      <p class="eyebrow">What it measures</p>
+      <h2>Seven scores from one approach</h2>
+      <p class="section-lead">Each part is scored out of 10 and rolled into an overall score.</p>
+    </div>
+    <div class="marquee" aria-label="The seven scores">
+      <div class="track">
+        {metrics.map((m) => (
+          <div class="card metric">
+            <h3>{m.name}</h3>
+            <p>{m.body}</p>
+          </div>
+        ))}
+        {metrics.map((m) => (
+          <div class="card metric" aria-hidden="true">
+            <h3>{m.name}</h3>
+            <p>{m.body}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -214,6 +226,42 @@ const faq = [
   </section>
 </Base>
 
+<script>
+  // Video growth: the width follows how far you've scrolled, from the inset card (p = 0)
+  // to the full page width with square corners (p = 1) once the video nears the top.
+  const video = document.querySelector<HTMLElement>('[data-grow]');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (video && !still.matches) {
+    const hero = video.parentElement!;
+    let top0 = 0;
+    const measure = () => {
+      video.style.removeProperty('--vw');
+      top0 = video.getBoundingClientRect().top + window.scrollY;
+    };
+    const update = () => {
+      const full = hero.clientWidth;
+      const start = Math.min(860, full - 40);
+      const span = Math.max(top0 - 56, 1);
+      const p = Math.min(Math.max(window.scrollY / span, 0), 1);
+      const e = 1 - Math.pow(1 - p, 2);
+      video.style.setProperty('--vw', `${start + (full - start) * e}px`);
+      video.style.setProperty('--vr', `${16 * (1 - e)}px`);
+      video.style.setProperty('--vb', `${2 * (1 - e)}px`);
+    };
+    let queued = false;
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; update(); });
+    };
+    const refresh = () => { measure(); update(); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', refresh);
+    window.addEventListener('load', refresh);
+    refresh();
+  }
+</script>
+
 <style>
   /* Placeholders: visible on purpose, so nothing unfinished passes as real. */
   .ph { font-style: italic; color: var(--muted); }
@@ -231,15 +279,15 @@ const faq = [
   .button.outline { background: transparent; color: var(--fg); border-color: var(--line); }
 
   /* Hero: navy band, centred, one loud line. Volt is text-safe on navy only. */
-  .hero { background: var(--band); color: #fff; }
-  .hero-in { padding: 72px 20px 64px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .hero { background: var(--band); color: #fff; padding-bottom: 64px; }
+  .hero-in { padding: 72px 20px 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
   .slogan { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase;
     font-size: clamp(3.2rem, 12vw, 6rem); line-height: .92; letter-spacing: -.01em; color: var(--volt); margin: 0 0 22px; }
   .lead { font-size: clamp(1.08rem, 3.2vw, 1.3rem); color: #d5deea; max-width: 36rem; margin: 0 0 30px; }
   .hero .button:focus-visible { outline-color: #fff; }
   .note { font-size: .9rem; color: #a9b6cc; margin: 12px 0 0; }
-  .video { width: 100%; max-width: 860px; aspect-ratio: 16 / 9; margin-top: 48px; border-radius: 16px;
-    border-color: rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .04);
+  .video { width: var(--vw, min(860px, calc(100% - 40px))); max-height: 88vh; aspect-ratio: 16 / 9; margin: 48px auto 0;
+    border-radius: var(--vr, 16px); border-width: var(--vb, 2px); border-color: rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .04);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
   .video .ph { color: #a9b6cc; }
   .play { width: 64px; height: 64px; border-radius: 50%; background: var(--volt); position: relative; }
@@ -248,11 +296,11 @@ const faq = [
 
   /* Sections: small label, big centred heading, content. */
   .section { padding-top: 96px; }
-  .section > h2 { font-family: var(--font-display); font-weight: 700; text-align: center;
+  .section > h2, .head > h2 { font-family: var(--font-display); font-weight: 700; text-align: center;
     font-size: clamp(2.2rem, 6vw, 3rem); line-height: 1.05; margin: 0 0 14px; }
   .section-lead { text-align: center; color: var(--muted); max-width: 36rem; margin: 0 auto 36px; font-size: 1.05rem; }
   .section-lead.small { margin: 20px auto 0; font-size: .95rem; }
-  .section > h2 + :not(.section-lead) { margin-top: 36px; }
+  .section > h2 + :not(.section-lead), .head > h2 + :not(.section-lead) { margin-top: 36px; }
   .narrow { max-width: 760px; }
 
   .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
@@ -269,11 +317,21 @@ const faq = [
   .fact h3 { font-size: 1.05rem; margin: 0 0 4px; }
   .fact p { margin: 0; color: var(--muted); }
 
-  .metrics { display: grid; gap: 16px; }
-  @media (min-width: 640px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 960px) { .metrics { grid-template-columns: repeat(4, 1fr); } }
-  .metric { padding: 20px; }
+  /* One row of cards drifting sideways, endlessly. The set is repeated twice, so moving
+     the track left by half its width loops with no jump. Pauses on hover and focus. */
+  .marquee { overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .track { display: flex; gap: 16px; width: max-content; animation: drift 60s linear infinite; }
+  .marquee:hover .track, .marquee:focus-within .track { animation-play-state: paused; }
+  @keyframes drift { to { transform: translateX(calc(-50% - 8px)); } }
+  .metric { flex: none; width: 290px; padding: 20px; }
   .metric h3 { font-size: 1.25rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+    .track { animation: none; }
+    .metric[aria-hidden='true'] { display: none; }
+  }
 
   .soon { display: grid; gap: 16px; }
   @media (min-width: 760px) { .soon { grid-template-columns: repeat(3, 1fr); } }
