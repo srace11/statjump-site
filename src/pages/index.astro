@@ -1,92 +1,285 @@
 ---
+// Home page, laid out like a single-scroll product page: hero, video, how it works,
+// what it measures, coming soon, about, pricing, FAQ, final call to action.
+// Facts come from ~/Documents/statjump-app/README.md. Anything not decided yet is a
+// visible placeholder (class "ph"): replace those, don't invent numbers.
 import Base from '../layouts/Base.astro';
-import StoreBadges from '../components/StoreBadges.astro';
 import { app } from '../app.config';
+
+const steps = [
+  {
+    title: 'Film one approach',
+    body: 'A friend holds the phone, or it sits on a tripod, 10 to 15 feet from the side of your approach at head height. Record at 60fps.',
+  },
+  {
+    title: 'Tell it about you',
+    body: 'Your height, hitting hand and level. Your height is the ruler: it turns the video into real distances.',
+  },
+  {
+    title: 'Get your scores',
+    body: 'Every part of the approach is scored out of 10, plus an overall score, so you know exactly what to work on.',
+  },
+];
+
+const facts = [
+  { title: 'Same video, same score', body: 'Analyze the same clip twice and you get the same result, every time. Progress you see is real progress.' },
+  { title: 'All on your phone', body: 'The analysis runs entirely on your device. Your video never leaves your phone.' },
+  { title: 'Scored for your level', body: 'Youth to elite. Jump height is judged against your level, while technique is judged the same for everyone.' },
+];
+
+const metrics = [
+  { name: 'Estimated vertical', body: 'Jump height, from flight time and hip rise.' },
+  { name: 'Touch height', body: 'How far you reach above the net.' },
+  { name: 'Ground contact time', body: 'How long your final plant takes.' },
+  { name: 'Arm swing', body: 'Backswing range and timing, forward swing, bow-and-arrow.' },
+  { name: 'Knee bend and load', body: 'Depth, trunk lean and timing of the plant.' },
+  { name: 'Penultimate step', body: 'Length, rhythm, hip lowering and a heel-first plant.' },
+  { name: 'Approach', body: 'Footwork pattern, speed build-up, and habits like a bunny hop or stutter step.' },
+];
+
+const faq = [
+  {
+    q: 'What do I need?',
+    a: 'A phone that records at 60fps, and a friend to hold it or a tripod. Film from 10 to 15 feet to the side of your approach, at head height.',
+  },
+  { q: 'Does my video get uploaded anywhere?', a: 'No. Everything runs on your phone, and no video leaves it.' },
+  {
+    q: 'If I analyze the same video twice, do I get the same score?',
+    a: 'Yes. The same video always gets the same score.',
+  },
+  {
+    q: 'Which jumps does it analyze?',
+    a: 'One spike approach per video. Block jumps and back-row attacks are not supported yet.',
+  },
+  { q: 'How accurate is it?', ph: '[Accuracy, once it has been checked against a jump mat or Vertec]' },
+  { q: 'Which phones does it work on?', ph: '[iPhone and Android support, and minimum versions]' },
+  { q: 'When does it launch?', ph: '[Launch date or season]', after: ' Join the waitlist and we will email you once when it is out.' },
+];
 ---
 <Base>
+  <!-- Hero -->
   <section class="hero">
     <div class="wrap hero-in">
-      <div class="hero-copy">
-        <h1>
-          <img src="/brand/stat-jump-lockup-reverse.svg" alt={`${app.name} Volleyball`} width="477" height="93" />
-        </h1>
-        <p class="slogan">{app.tagline}</p>
-        <p class="lead">{app.description}</p>
-        <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+      <p class="eyebrow on-navy">Volleyball approach analysis</p>
+      <h1 class="slogan">{app.tagline}</h1>
+      <p class="lead">
+        Film one spike approach from the side. {app.name} scores every part of it out of 10, so you know exactly what to fix.
+      </p>
+      <a class="button" href="/waitlist">Join the waitlist</a>
+      <p class="note">Free to join. One email when we launch.</p>
+
+      <div class="video ph-frame" role="img" aria-label="How it works video, coming soon">
+        <span class="play" aria-hidden="true"></span>
+        <span class="ph">[How it works video]</span>
       </div>
-      <aside class="hero-join" aria-label="Waitlist">
-        <p class="join-label">Launching soon</p>
-        <p class="join-text">Get one email when {app.name} launches.</p>
-        <a class="join-button" href="/waitlist">Join the waitlist</a>
-      </aside>
     </div>
   </section>
 
-  <section class="wrap features" aria-label="How it works">
-    {app.features.map((f) => (
-      <article class="feature">
-        <div class="feature-num" aria-hidden="true">{f.icon}</div>
-        <h2>{f.title}</h2>
-        <p>{f.body}</p>
-      </article>
-    ))}
+  <!-- How it works -->
+  <section id="how" class="section wrap">
+    <p class="eyebrow">How it works</p>
+    <h2>Your approach, scored in 3 steps</h2>
+    <ol class="steps">
+      {steps.map((s, i) => (
+        <li class="card">
+          <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+        </li>
+      ))}
+    </ol>
+    <div class="facts">
+      {facts.map((f) => (
+        <div class="fact">
+          <h3>{f.title}</h3>
+          <p>{f.body}</p>
+        </div>
+      ))}
+    </div>
   </section>
 
-  {app.screenshots.length > 0 && (
-    <section class="shots-section" aria-label="Screenshots">
-      <div class="shots wrap">
-        {app.screenshots.map((s) => (
-          <img src={s.src} alt={s.alt} width="300" height="650" loading="lazy" decoding="async" />
-        ))}
-      </div>
-    </section>
-  )}
+  <!-- What it measures -->
+  <section id="measures" class="section wrap">
+    <p class="eyebrow">What it measures</p>
+    <h2>Seven scores from one approach</h2>
+    <p class="section-lead">Each part is scored out of 10 and rolled into an overall score.</p>
+    <div class="metrics">
+      {metrics.map((m) => (
+        <div class="card metric">
+          <h3>{m.name}</h3>
+          <p>{m.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
 
-  <section class="wrap cta">
-    <h2>Get {app.name}</h2>
-    <a class="join-button" href="/waitlist">Join the waitlist</a>
-    <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+  <!-- Coming soon -->
+  <section id="soon" class="section wrap">
+    <p class="eyebrow">Coming soon</p>
+    <h2>What's next</h2>
+    <div class="soon">
+      {[1, 2, 3].map(() => (
+        <div class="card ph-frame">
+          <h3 class="ph">[Feature name]</h3>
+          <p class="ph">[One line on what it does]</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section wrap">
+    <p class="eyebrow">About</p>
+    <h2>Hi, I'm Shane</h2>
+    <div class="about card">
+      <img src="/about/shane.jpg" alt="Shane Racey" width="160" height="160" loading="lazy" />
+      <div>
+        <p>
+          I studied operations research at Cornell and pole vaulted for Cornell and Kentucky. Now I work in data
+          science and build small, focused apps.
+        </p>
+        <p class="ph">[Why you're building Stat Jump, and your connection to volleyball]</p>
+        <p><a href={app.hubUrl}>More of my apps</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="section wrap">
+    <p class="eyebrow">Pricing</p>
+    <h2>Simple pricing</h2>
+    <div class="plans">
+      <div class="card plan">
+        <h3>Free</h3>
+        <p class="price"><span class="ph">[$0]</span></p>
+        <ul>
+          <li class="ph">[What's included]</li>
+          <li class="ph">[What's included]</li>
+        </ul>
+        <a class="button outline" href="/waitlist">Join the waitlist</a>
+      </div>
+      <div class="card plan featured">
+        <h3>Pro</h3>
+        <p class="price"><span class="ph">[$X / month]</span></p>
+        <ul>
+          <li class="ph">[What's included]</li>
+          <li class="ph">[What's included]</li>
+          <li class="ph">[What's included]</li>
+        </ul>
+        <a class="button" href="/waitlist">Join the waitlist</a>
+      </div>
+    </div>
+    <p class="section-lead small">Pricing isn't final yet.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section wrap narrow">
+    <p class="eyebrow">FAQ</p>
+    <h2>Questions</h2>
+    <div class="faq">
+      {faq.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a ?? <><span class="ph">{f.ph}</span>{f.after}</>}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- Final call to action -->
+  <section class="section wrap final">
+    <h2 class="slogan dark">{app.tagline}</h2>
+    <p class="section-lead">Be first to score your approach.</p>
+    <a class="button" href="/waitlist">Join the waitlist</a>
   </section>
 </Base>
 
 <style>
-  /* Navy band with Volt: the brand's loudest look. Volt is text-safe on navy only. */
-  .hero { background: var(--band); color: #fff; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%); }
-  .hero-in { padding: 64px 20px 104px; display: grid; gap: 40px; align-items: center; }
-  @media (min-width: 880px) { .hero-in { grid-template-columns: 1fr 300px; gap: 56px; } }
-  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; }
-  .hero h1 { margin: 0 0 28px; }
-  .hero h1 img { width: min(420px, 100%); height: auto; }
-  .hero-join { background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .14);
-    border-radius: var(--radius); padding: 24px; }
-  .join-label { font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--volt); margin: 0 0 6px; }
-  .join-text { margin: 0 0 18px; color: #d5deea; }
-  .join-button { display: flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 22px;
-    background: var(--volt); color: var(--on-volt); border-radius: var(--radius); font-weight: 600; font-size: 1.05rem;
-    text-decoration: none; }
-  .join-button:hover { filter: brightness(1.06); }
-  .join-button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-  .cta .join-button { width: min(300px, 100%); }
-  .cta .join-button:focus-visible { outline-color: var(--accent); }
+  /* Placeholders: visible on purpose, so nothing unfinished passes as real. */
+  .ph { font-style: italic; color: var(--muted); }
+  .ph-frame { border: 2px dashed var(--line); }
+
+  .eyebrow { font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 10px; text-align: center; }
+  .eyebrow.on-navy { color: var(--volt); }
+
+  .button { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 28px;
+    background: var(--volt); color: var(--on-volt); border: 2px solid var(--volt); border-radius: var(--radius);
+    font-weight: 600; font-size: 1.05rem; text-decoration: none; }
+  .button:hover { filter: brightness(1.06); }
+  .button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .button.outline { background: transparent; color: var(--fg); border-color: var(--line); }
+
+  /* Hero: navy band, centred, one loud line. Volt is text-safe on navy only. */
+  .hero { background: var(--band); color: #fff; }
+  .hero-in { padding: 72px 20px 64px; display: flex; flex-direction: column; align-items: center; text-align: center; }
   .slogan { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase;
-    font-size: clamp(3rem, 11vw, 4.5rem); line-height: .95; letter-spacing: -.01em; color: var(--volt); margin: 0 0 20px; }
-  .lead { font-size: clamp(1.05rem, 3.2vw, 1.25rem); color: #d5deea; max-width: 34rem; margin: 0 0 32px; }
+    font-size: clamp(3.2rem, 12vw, 6rem); line-height: .92; letter-spacing: -.01em; color: var(--volt); margin: 0 0 22px; }
+  .lead { font-size: clamp(1.08rem, 3.2vw, 1.3rem); color: #d5deea; max-width: 36rem; margin: 0 0 30px; }
+  .hero .button:focus-visible { outline-color: #fff; }
+  .note { font-size: .9rem; color: #a9b6cc; margin: 12px 0 0; }
+  .video { width: 100%; max-width: 860px; aspect-ratio: 16 / 9; margin-top: 48px; border-radius: 16px;
+    border-color: rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .04);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+  .video .ph { color: #a9b6cc; }
+  .play { width: 64px; height: 64px; border-radius: 50%; background: var(--volt); position: relative; }
+  .play::after { content: ''; position: absolute; left: 26px; top: 20px; border-left: 18px solid var(--on-volt);
+    border-top: 12px solid transparent; border-bottom: 12px solid transparent; }
 
-  .features { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 56px; }
-  @media (min-width: 720px) { .features { grid-template-columns: repeat(3, 1fr); } }
-  .feature { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
-  .feature-num { font-family: var(--font-mono); font-weight: 700; font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
-  .feature h2 { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; line-height: 1.1; margin: 0 0 6px; }
-  .feature p { margin: 0; color: var(--muted); }
+  /* Sections: small label, big centred heading, content. */
+  .section { padding-top: 96px; }
+  .section > h2 { font-family: var(--font-display); font-weight: 700; text-align: center;
+    font-size: clamp(2.2rem, 6vw, 3rem); line-height: 1.05; margin: 0 0 14px; }
+  .section-lead { text-align: center; color: var(--muted); max-width: 36rem; margin: 0 auto 36px; font-size: 1.05rem; }
+  .section-lead.small { margin: 20px auto 0; font-size: .95rem; }
+  .section > h2 + :not(.section-lead) { margin-top: 36px; }
+  .narrow { max-width: 760px; }
 
-  .shots-section { margin-top: 64px; }
-  .shots { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; }
-  .shots img { flex: 0 0 auto; width: min(240px, 70vw); aspect-ratio: 300 / 650; object-fit: cover;
-    border-radius: 24px; border: 1px solid var(--line); scroll-snap-align: start; }
-  @media (min-width: 900px) { .shots { justify-content: center; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .card h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; line-height: 1.1; margin: 0 0 6px; }
+  .card p { margin: 0; color: var(--muted); }
 
-  .cta { text-align: center; margin-top: 72px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  .cta h2 { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase; font-size: 2.4rem; margin: 0; }
-  .cta :global(.badges) { justify-content: center; }
-  .muted { color: var(--muted); margin: 0; }
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+  @media (min-width: 760px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .num { display: block; font-family: var(--font-mono); font-weight: 700; font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+
+  .facts { display: grid; gap: 16px; margin-top: 16px; }
+  @media (min-width: 760px) { .facts { grid-template-columns: repeat(3, 1fr); } }
+  .fact { border-top: 3px solid var(--volt); padding: 18px 4px 0; }
+  .fact h3 { font-size: 1.05rem; margin: 0 0 4px; }
+  .fact p { margin: 0; color: var(--muted); }
+
+  .metrics { display: grid; gap: 16px; }
+  @media (min-width: 640px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 960px) { .metrics { grid-template-columns: repeat(4, 1fr); } }
+  .metric { padding: 20px; }
+  .metric h3 { font-size: 1.25rem; }
+
+  .soon { display: grid; gap: 16px; }
+  @media (min-width: 760px) { .soon { grid-template-columns: repeat(3, 1fr); } }
+  .soon .card { background: transparent; }
+
+  .about { display: grid; gap: 24px; align-items: center; max-width: 760px; margin: 0 auto; }
+  @media (min-width: 640px) { .about { grid-template-columns: 160px 1fr; } }
+  .about img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; }
+  .about p { color: var(--fg); margin: 0 0 12px; }
+  .about p:last-child { margin: 0; }
+  .about p.ph { color: var(--muted); }
+
+  .plans { display: grid; gap: 16px; max-width: 760px; margin: 0 auto; }
+  @media (min-width: 640px) { .plans { grid-template-columns: repeat(2, 1fr); } }
+  .plan { display: flex; flex-direction: column; gap: 14px; }
+  .plan.featured { border: 2px solid var(--volt); }
+  .price { font-family: var(--font-mono); font-weight: 700; font-size: 1.8rem; }
+  .plan ul { margin: 0; padding-left: 20px; flex: 1; }
+  .plan li { margin: 4px 0; }
+
+  .faq { display: grid; gap: 10px; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 0 20px; }
+  summary { cursor: pointer; font-weight: 600; padding: 16px 0; }
+  summary::marker { color: var(--accent); }
+  details p { margin: 0 0 16px; color: var(--muted); }
+
+  .final { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .slogan.dark { color: var(--fg); font-size: clamp(2.8rem, 10vw, 4.5rem); }
 </style>

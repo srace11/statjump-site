@@ -14,10 +14,12 @@ const pageTitle = title ? `${title} | ${app.name}` : `${app.name}: ${app.tagline
 const path = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/(.)\/$/, '$1') || '/';
 const canonical = new URL(path, app.url).href;
 const ogImage = new URL(app.ogImage, app.url).href;
+// Section links on the home page. Support, privacy and terms live in the footer.
 const nav = [
-  { href: '/support', label: 'Support' },
-  { href: '/privacy', label: 'Privacy' },
-  { href: '/terms', label: 'Terms' },
+  { href: '/#how', label: 'How it works' },
+  { href: '/#measures', label: 'Features' },
+  { href: '/#pricing', label: 'Pricing' },
+  { href: '/#faq', label: 'FAQ' },
 ];
 const brandVars = `--brand:${app.colors.accent};--brand-dark:${app.colors.accentDark};--brand-text:${app.colors.accentText}`;
 ---
@@ -55,10 +57,9 @@ const brandVars = `--brand:${app.colors.accent};--brand-dark:${app.colors.accent
           <span>{app.name}</span>
         </a>
         <nav class="site-nav" aria-label="Main">
-          {nav.map((l) => (
-            <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
-          ))}
+          {nav.map((l) => <a href={l.href}>{l.label}</a>)}
         </nav>
+        <a class="header-cta" href="/waitlist">Join the waitlist</a>
       </div>
     </header>
 

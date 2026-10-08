@@ -38,11 +38,6 @@ export const app = {
     googlePlay: '',
   },
 
-  features: [
-    { icon: '01', title: 'Film one approach', body: 'Set your phone at the side of the court and record a single approach and jump.' },
-    { icon: '02', title: 'Get the numbers', body: 'Vertical, approach speed, penultimate step and plant angle, measured from the video.' },
-    { icon: '03', title: 'Find the next inch', body: 'One clear fix per session, and a log of every inch you gain.' },
-  ],
 
   // Screenshots in public/screenshots/. Portrait phone shots work best (e.g. 1290x2796).
   screenshots: [] as { src: string; alt: string }[],
