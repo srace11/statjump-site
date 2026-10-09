@@ -4,7 +4,7 @@
 export const app = {
   // Basics
   name: 'Stat Jump',
-  tagline: 'Kill it with data.',
+  tagline: 'Kill it with data',
   description:
     'Stat Jump turns a phone video of your volleyball approach and jump into numbers you can train against.',
 
