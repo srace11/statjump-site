@@ -61,9 +61,8 @@ const faq = [
     q: 'How much does it cost?',
     a: "It's free during the beta. The beta won't last forever, and paid plans will come later.",
   },
-  { q: 'How accurate is it?', ph: '[Accuracy, once it has been checked against a jump mat or Vertec]' },
-  { q: 'Which phones does it work on?', ph: '[iPhone and Android support, and minimum versions]' },
-  { q: 'When does it launch?', ph: '[Launch date or season]', after: ' Join the waitlist and we will email you once when it is out.' },
+  { q: 'Which phones does it work on?', a: 'We plan to release it for both iOS and Android.' },
+  { q: 'When does it launch?', a: 'Late fall. Join the waitlist and we will email you once when it is out.' },
 ];
 ---
 <Base>
@@ -193,7 +192,11 @@ const faq = [
           I studied operations research at Cornell and pole vaulted for Cornell and Kentucky. Now I work in data
           science and build small, focused apps.
         </p>
-        <p class="ph">[Why you're building Stat Jump, and your connection to volleyball]</p>
+        <p>
+          I recently got into volleyball since retiring from track and field. I noticed that some rec players struggle
+          with the approach and proper jumping. I knew that with my biomechanics and coding background, that I could
+          help more people with this tool.
+        </p>
         <p><a href={app.hubUrl}>More of my apps</a></p>
       </div>
     </div>
