@@ -43,8 +43,6 @@ const soon = [
   { title: 'Team tracking and analysis', body: 'Track and compare analyses across a whole team.' },
 ];
 
-const premium = ['Full breakdown of every score', 'The fixes to work on', 'Progress tracking'];
-
 const faq = [
   {
     q: 'What do I need?',
@@ -61,7 +59,7 @@ const faq = [
   },
   {
     q: 'How much does it cost?',
-    a: 'Your first analysis is free. Stat Jump Premium is $34.99 a year or $8.99 a month.',
+    a: "It's free during the beta. The beta won't last forever, and paid plans will come later.",
   },
   { q: 'How accurate is it?', ph: '[Accuracy, once it has been checked against a jump mat or Vertec]' },
   { q: 'Which phones does it work on?', ph: '[iPhone and Android support, and minimum versions]' },
@@ -154,37 +152,20 @@ const faq = [
   <!-- Pricing -->
   <section id="pricing" class="section wrap">
     <p class="eyebrow">Pricing</p>
-    <h2>Try your first analysis free</h2>
-    <div class="plans">
-      <div class="card plan">
-        <h3>Free</h3>
-        <p class="price">$0</p>
-        <p class="plan-sub">Your first analysis</p>
-        <ul>
-          <li>Record one approach</li>
-          <li>See part of your results</li>
-        </ul>
-        <a class="button outline" href="/waitlist">Join the waitlist</a>
-      </div>
+    <h2>Free while we're in beta</h2>
+    <div class="plans single">
       <div class="card plan featured">
-        <p class="badge-best">Best value</p>
-        <h3>Premium, yearly</h3>
-        <p class="price">$34.99 <span class="per">/ year</span></p>
+        <p class="badge-tag">Limited time</p>
+        <h3>Beta</h3>
+        <p class="price">Free</p>
         <ul>
-          {premium.map((item) => <li>{item}</li>)}
+          <li>Full access to the app</li>
+          <li>Nothing to pay during the beta</li>
         </ul>
         <a class="button" href="/waitlist">Join the waitlist</a>
       </div>
-      <div class="card plan">
-        <h3>Premium, monthly</h3>
-        <p class="price">$8.99 <span class="per">/ month</span></p>
-        <ul>
-          {premium.map((item) => <li>{item}</li>)}
-        </ul>
-        <a class="button outline" href="/waitlist">Join the waitlist</a>
-      </div>
     </div>
-    <p class="section-lead small">Available when Stat Jump launches. Join the waitlist to be first.</p>
+    <p class="section-lead small">The beta won't last forever, and paid plans will come later.</p>
   </section>
 
   <!-- FAQ -->
@@ -344,15 +325,12 @@ const faq = [
   .about p:last-child { margin: 0; }
   .about p.ph { color: var(--muted); }
 
-  .plans { display: grid; gap: 16px; max-width: 980px; margin: 0 auto; }
-  @media (min-width: 860px) { .plans { grid-template-columns: repeat(3, 1fr); } }
+  .plans { display: grid; gap: 16px; max-width: 420px; margin: 0 auto; }
   .plan { display: flex; flex-direction: column; gap: 14px; }
   .plan { position: relative; }
   .plan.featured { border: 2px solid var(--volt); }
-  .card .badge-best { position: absolute; top: -13px; left: 20px; margin: 0; background: var(--volt); color: var(--on-volt);
+  .card .badge-tag { position: absolute; top: -13px; left: 20px; margin: 0; background: var(--volt); color: var(--on-volt);
     font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
-  .plan-sub { margin: -8px 0 0; color: var(--muted); }
-  .per { font-size: 1rem; font-weight: 400; color: var(--muted); }
   .card .price { font-family: var(--font-mono); font-weight: 700; font-size: 1.8rem; margin: 0; color: var(--fg); }
   .plan ul { margin: 0; padding-left: 20px; flex: 1; }
   .plan li { margin: 4px 0; }
