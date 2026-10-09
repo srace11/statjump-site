@@ -1,0 +1,154 @@
+---
+// "How scoring works" dropdown: every score's parts, their weights, and the measurement that earns each score.
+// Numbers come from src/data/rubric.ts. Level-scaled targets are rendered for every norms/level pair and the
+// pickers show one set, so the page works (showing the defaults) without JavaScript.
+import { metrics, norms, levels, targets, rubricVersion } from '../data/rubric';
+
+const defaultNorms = 'men';
+const defaultLevel = 'adultRec';
+const pct = (w: number) => `${Math.round(w * 100)}%`;
+---
+
+<details class="breakdown">
+  <summary>How each score is worked out</summary>
+  <div class="bd-body">
+    <p>
+      Every score is out of 10. Under each part are the measurements that earn a given score. Anything in between scores
+      proportionally, and anything past the ends gets the end score.
+    </p>
+
+    <div class="bd-pick">
+      <label>
+        <span>Norms</span>
+        <select data-bd-norms>
+          {norms.map((n) => <option value={n.id} selected={n.id === defaultNorms}>{n.label}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>Level</span>
+        <select data-bd-level>
+          {levels.map((l) => <option value={l.id} selected={l.id === defaultLevel}>{l.label}</option>)}
+        </select>
+      </label>
+    </div>
+    <p class="bd-hint">
+      These only change the targets marked <span class="tag">Set by level</span>. Technique targets are the same for
+      everyone.
+    </p>
+    <p class="sr-only" aria-live="polite" data-bd-status></p>
+
+    <div class="bd-metrics">
+      {metrics.map((m) => (
+        <details class="bd-metric">
+          <summary>
+            <span>{m.label}</span>
+            <span class="w">{pct(m.weight)} of overall</span>
+          </summary>
+          <p class="bd-about">{m.about}</p>
+          <ul class="bd-comps">
+            {m.components.map((c) => (
+              <li>
+                <p class="bd-comp-head">
+                  <strong>{c.label}</strong>
+                  {m.components.length > 1 && <span class="w">{pct(c.weight)} of this score</span>}
+                  {c.levelScaled && <span class="tag">Set by level</span>}
+                </p>
+                <p class="bd-about">{c.about}</p>
+                {c.rule ? (
+                  <p class="bd-rule">{c.rule}</p>
+                ) : c.levelScaled ? (
+                  norms.flatMap((n) =>
+                    levels.map((l) => (
+                      <ul
+                        class="bd-targets"
+                        data-variant={`${n.id}-${l.id}`}
+                        hidden={!(n.id === defaultNorms && l.id === defaultLevel)}
+                      >
+                        {targets(c, n.id, l.factor).map(([s, v]) => (
+                          <li><span class="sr-only">Score </span><b>{s}</b><span class="sr-only"> at </span><span>{v}</span></li>
+                        ))}
+                      </ul>
+                    )),
+                  )
+                ) : (
+                  <ul class="bd-targets">
+                    {targets(c, defaultNorms, 1).map(([s, v]) => (
+                      <li><span class="sr-only">Score </span><b>{s}</b><span class="sr-only"> at </span><span>{v}</span></li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+          {m.note && <p class="bd-note">{m.note}</p>}
+        </details>
+      ))}
+    </div>
+
+    <p class="bd-foot">
+      Your overall score is the weighted average of the seven scores, so technique counts for 70% and jump height and
+      reach for 30%. If part of your approach isn't visible in the video, it's skipped and the rest are reweighted.
+      These targets are starting values based on typical ranges in volleyball jump research, and we'll tune them during
+      the beta. Rubric v{rubricVersion}.
+    </p>
+  </div>
+</details>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.breakdown');
+  if (root) {
+    const normsSel = root.querySelector<HTMLSelectElement>('[data-bd-norms]')!;
+    const levelSel = root.querySelector<HTMLSelectElement>('[data-bd-level]')!;
+    const status = root.querySelector<HTMLElement>('[data-bd-status]')!;
+    const show = () => {
+      const key = `${normsSel.value}-${levelSel.value}`;
+      root.querySelectorAll<HTMLElement>('[data-variant]').forEach((el) => (el.hidden = el.dataset.variant !== key));
+      const n = normsSel.selectedOptions[0].text;
+      const l = levelSel.selectedOptions[0].text;
+      status.textContent = `Showing ${n} targets for ${l}.`;
+    };
+    normsSel.addEventListener('change', show);
+    levelSel.addEventListener('change', show);
+  }
+</script>
+
+<style>
+  .breakdown { max-width: 760px; margin: 28px auto 0; background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); }
+  .breakdown > summary { cursor: pointer; font-weight: 600; padding: 16px 20px; }
+  summary::marker { color: var(--accent); }
+  summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: var(--radius); }
+  .bd-body { padding: 0 20px 20px; }
+  .bd-body p { margin: 0 0 14px; color: var(--muted); }
+
+  .bd-pick { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 8px; }
+  .bd-pick label { display: flex; flex-direction: column; gap: 4px; font-size: .9rem; font-weight: 600; color: var(--fg); }
+  .bd-pick select { min-height: 44px; min-width: 170px; padding: 8px 10px; font: inherit; font-weight: 400; color: var(--fg);
+    background: var(--bg); border: 1px solid var(--muted); border-radius: var(--radius); }
+  .bd-pick select:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .bd-body .bd-hint { font-size: .9rem; }
+
+  .tag { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    padding: 1px 8px; border-radius: 999px; background: var(--volt-soft); color: var(--fg); white-space: nowrap; }
+
+  .bd-metrics { display: grid; gap: 8px; margin: 18px 0; }
+  .bd-metric { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 0 16px; }
+  .bd-metric > summary { cursor: pointer; padding: 14px 0; font-weight: 600; color: var(--fg); }
+  .bd-metric > summary > span:first-child { margin-right: 8px; }
+  .w { font-size: .85rem; font-weight: 400; color: var(--muted); }
+
+  .bd-comps { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 14px; }
+  .bd-comps > li { border-top: 1px solid var(--line); padding-top: 12px; }
+  .bd-body .bd-comp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0 0 2px; color: var(--fg); }
+  .bd-body .bd-about { margin: 0 0 8px; }
+  .bd-body .bd-rule { margin: 0; color: var(--fg); }
+  .bd-body .bd-note { margin: 0 0 14px; font-size: .9rem; border-left: 3px solid var(--volt); padding-left: 10px; }
+
+  .bd-targets { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .bd-targets[hidden] { display: none; }
+  .bd-targets li { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border: 1px solid var(--line);
+    border-radius: 999px; font-family: var(--font-mono); font-size: .85rem; color: var(--fg); }
+  .bd-targets b { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 4px; border-radius: 999px;
+    background: var(--navy); color: var(--volt); font-size: .8rem; }
+  .bd-body .bd-foot { margin: 0; font-size: .9rem; }
+</style>

@@ -5,6 +5,7 @@
 // visible placeholder (class "ph"): replace those, don't invent numbers.
 import Base from '../layouts/Base.astro';
 import { app } from '../app.config';
+import ScoringBreakdown from '../components/ScoringBreakdown.astro';
 
 const steps = [
   {
@@ -58,6 +59,10 @@ const faq = [
     a: 'One spike approach per video. Block jumps and back-row attacks are not supported yet.',
   },
   {
+    q: 'How does it spot a bunny hop or a stutter step?',
+    a: 'It tracks every time each foot touches the floor, and flags a bunny hop when both feet land together after a moment in the air before your penultimate step, along with stutter steps, crossover steps and standing starts.',
+  },
+  {
     q: 'How much does it cost?',
     a: "It's free during the beta. The beta won't last forever, and paid plans will come later.",
   },
@@ -80,10 +85,34 @@ const faq = [
     </div>
 
     <!-- Starts as an inset rounded card and grows to the full page width as you scroll (script below). -->
-    <div class="video ph-frame" data-grow role="img" aria-label="How it works video, coming soon">
-      <span class="play" aria-hidden="true"></span>
-      <span class="ph">[How it works video]</span>
-    </div>
+    <!-- Muted, looping demo. It autoplays unless the viewer prefers reduced motion, and the
+         button pauses it (WCAG 2.2.2). It has no sound, so the text description stands in for it (WCAG 1.2.1). -->
+    <figure class="video" data-grow>
+      <video
+        muted
+        loop
+        playsinline
+        controls
+        preload="metadata"
+        poster="/video/showcase-poster.jpg"
+        aria-label="Stat Jump demo: one spike approach, analyzed"
+        aria-describedby="showcase-desc"
+      >
+        <source src="/video/showcase.mp4" type="video/mp4" />
+      </video>
+      <button class="video-toggle" type="button" hidden>
+        <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
+        <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+        <span class="sr-only">Pause video</span>
+      </button>
+      <figcaption id="showcase-desc" class="sr-only">
+        A player runs a spike approach and jumps next to the net while {app.name} tracks their body with a skeleton
+        overlay. Labels appear at each moment: approach speed 10.4 mph, penultimate step 0.40 seconds, plant contact
+        0.24 seconds, deepest knee bend 119 degrees, vertical 26.8 inches, touch height 10 feet 0 inches, and hang time.
+        It ends on the score card: overall 7.8 out of 10, with vertical 7.1, touch height 7.2, ground contact 10.0, arm
+        swing 7.8, knee bend 8.7, penultimate step 8.3 and approach 6.3.
+      </figcaption>
+    </figure>
   </section>
 
   <!-- How it works -->
@@ -116,7 +145,7 @@ const faq = [
       <h2>Seven scores from one approach</h2>
       <p class="section-lead">Each part is scored out of 10 and rolled into an overall score.</p>
     </div>
-    <div class="marquee" aria-label="The seven scores">
+    <div class="marquee" role="group" aria-label="The seven scores">
       <div class="track">
         {metrics.map((m) => (
           <div class="card metric">
@@ -131,6 +160,9 @@ const faq = [
           </div>
         ))}
       </div>
+    </div>
+    <div class="wrap">
+      <ScoringBreakdown />
     </div>
   </section>
 
@@ -244,6 +276,25 @@ const faq = [
     window.addEventListener('load', refresh);
     refresh();
   }
+
+  // Demo video: swap the native controls (the no-JS fallback) for one pause/play button,
+  // and only autoplay when the viewer hasn't asked for reduced motion.
+  const demo = document.querySelector<HTMLVideoElement>('.video video');
+  const toggle = document.querySelector<HTMLButtonElement>('.video-toggle');
+  if (demo && toggle) {
+    const label = toggle.querySelector('.sr-only')!;
+    const sync = () => {
+      toggle.classList.toggle('paused', demo.paused);
+      label.textContent = demo.paused ? 'Play video' : 'Pause video';
+    };
+    demo.controls = false;
+    toggle.hidden = false;
+    demo.addEventListener('play', sync);
+    demo.addEventListener('pause', sync);
+    toggle.addEventListener('click', () => (demo.paused ? demo.play() : demo.pause()));
+    sync();
+    if (!still.matches) demo.play().catch(sync);
+  }
 </script>
 
 <style>
@@ -270,13 +321,21 @@ const faq = [
   .lead { font-size: clamp(1.08rem, 3.2vw, 1.3rem); color: #d5deea; max-width: 36rem; margin: 0 0 30px; }
   .hero .button:focus-visible { outline-color: #fff; }
   .note { font-size: .9rem; color: #a9b6cc; margin: 12px 0 0; }
-  .video { width: var(--vw, min(860px, calc(100% - 40px))); max-height: 88vh; aspect-ratio: 16 / 9; margin: 48px auto 0;
-    border-radius: var(--vr, 16px); border-width: var(--vb, 2px); border-color: rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .04);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
-  .video .ph { color: #a9b6cc; }
-  .play { width: 64px; height: 64px; border-radius: 50%; background: var(--volt); position: relative; }
-  .play::after { content: ''; position: absolute; left: 26px; top: 20px; border-left: 18px solid var(--on-volt);
-    border-top: 12px solid transparent; border-bottom: 12px solid transparent; }
+  .video { position: relative; overflow: hidden; width: var(--vw, min(860px, calc(100% - 40px))); max-height: 88vh;
+    aspect-ratio: 16 / 9; margin: 48px auto 0; border-radius: var(--vr, 16px);
+    border: var(--vb, 2px) solid rgba(255, 255, 255, .25); background: var(--navy); }
+  /* contain, not cover: when max-height kicks in, cover would crop the score card text. */
+  .video video { display: block; width: 100%; height: 100%; object-fit: contain; }
+  /* Small on purpose, but 24px is the smallest tap target WCAG 2.5.8 allows. */
+  .video-toggle { position: absolute; right: 10px; bottom: 10px; width: 24px; height: 24px; border-radius: 4px;
+    display: grid; place-items: center; padding: 0; cursor: pointer;
+    background: rgba(11, 27, 51, .6); color: #fff; border: 0; }
+  .video-toggle[hidden] { display: none; }
+  .video-toggle svg { width: 14px; height: 14px; fill: currentColor; }
+  .video-toggle:hover { background: var(--navy); }
+  .video-toggle:focus-visible { outline: 3px solid var(--volt); outline-offset: 3px; }
+  .video-toggle .i-play, .video-toggle.paused .i-pause { display: none; }
+  .video-toggle.paused .i-play { display: block; }
 
   /* Sections: small label, big centred heading, content. */
   .section { padding-top: 96px; }
@@ -312,8 +371,10 @@ const faq = [
   .metric { flex: none; width: 290px; padding: 20px; }
   .metric h3 { font-size: 1.25rem; }
   @media (prefers-reduced-motion: reduce) {
-    .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
-    .track { animation: none; }
+    /* Wrap into rows instead of a sideways scroller, so nothing is out of keyboard reach. */
+    .marquee { overflow: visible; -webkit-mask-image: none; mask-image: none; }
+    .track { animation: none; width: auto; max-width: var(--maxw); margin: 0 auto; padding: 0 20px;
+      flex-wrap: wrap; justify-content: center; }
     .metric[aria-hidden='true'] { display: none; }
   }
 
