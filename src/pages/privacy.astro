@@ -4,7 +4,7 @@
 import Base from '../layouts/Base.astro';
 import { app } from '../app.config';
 
-const updated = 'October 5, 2026';
+const updated = 'October 10, 2026';
 ---
 <Base title="Privacy Policy" description={`How ${app.name} handles your waitlist signup.`}>
   <article class="wrap prose">
@@ -23,16 +23,41 @@ const updated = 'October 5, 2026';
       <li><strong>Optional answers</strong> about your position or role and your level, if you choose to give them.</li>
       <li><strong>Your consent</strong> and the time you gave it.</li>
       <li>
+        <strong>Where you came from</strong>, such as "reddit" or "instagram", if the link you followed was labeled
+        with one or your browser told us the site that sent you. See <a href="#source">How we know where you came
+        from</a>.
+      </li>
+      <li>
         <strong>A scrambled version of your IP address</strong> (a one-way hash), used only to block spam and
         repeated signups. We never store your IP address itself.
       </li>
     </ul>
 
     <h2>Why we collect it</h2>
+    <p>We use your email address to:</p>
+    <ul>
+      <li><strong>Send you launch updates</strong> about {app.name}, including when it's out.</li>
+      <li>
+        <strong>Occasionally ask for your input</strong> to help shape {app.name}, for example a short survey, a
+        request for feedback, or an invitation to try an early version. Answering is always optional.
+      </li>
+    </ul>
     <p>
-      To email you about the {app.name} launch, and to see in total how much interest there is and from which
-      positions and levels. We don't sell your information, share it for advertising, or add you to any other
-      mailing list.
+      We use the rest to see, in total, how much interest there is, from which positions and levels, and which
+      places people find {app.name} through. We don't sell your information, share it for advertising, or add you
+      to any other mailing list.
+    </p>
+    <p>
+      To stop getting emails, reply to any of them and ask, or write to the address under
+      <a href="#delete">Deleting your signup</a>.
+    </p>
+
+    <h2 id="source">How we know where you came from</h2>
+    <p>
+      Links we share can carry a label, such as <code>?utm_source=reddit</code>. When you arrive, the site keeps
+      that label, or else the name of the site that sent you, in your browser's session storage. That storage
+      belongs to the tab and is cleared when you close it. If you join the waitlist, the label is sent along with
+      your signup. We use no cookies for this, and nothing is sent anywhere unless you sign up.
     </p>
 
     <h2>Who handles it</h2>
@@ -48,7 +73,7 @@ const updated = 'October 5, 2026';
       it sooner at any time.
     </p>
 
-    <h2>Deleting your signup</h2>
+    <h2 id="delete">Deleting your signup</h2>
     <p>
       Email <a href={`mailto:${app.privacyEmail}?subject=${encodeURIComponent(`Delete my ${app.name} waitlist signup`)}`}>{app.privacyEmail}</a>
       from the address you signed up with and ask us to delete it. We'll remove it and confirm within 30 days.

@@ -1,0 +1,20 @@
+---
+// Remembers where this visit came from, so the waitlist form can send it with a signup.
+// The label is the link's ?utm_source= (e.g. https://statjump.shaneracey.com/?utm_source=reddit), or else
+// the referring site's hostname. It's kept in sessionStorage (this tab only, gone when it closes), no cookies.
+// The first source in a visit wins, so browsing around the site doesn't overwrite it.
+---
+<script is:inline>
+  try {
+    if (!sessionStorage.getItem('signup-source')) {
+      var tag = new URLSearchParams(location.search).get('utm_source') || '';
+      var src = tag.trim().toLowerCase();
+      if (!src && document.referrer) {
+        var host = new URL(document.referrer).hostname.replace(/^www\./, '');
+        if (host !== location.hostname) src = host;
+      }
+      // Same rule as the waitlist API: anything else is stored as unknown there anyway.
+      if (/^[a-z0-9._-]{1,40}$/.test(src)) sessionStorage.setItem('signup-source', src);
+    }
+  } catch (e) {}
+</script>

@@ -3,11 +3,11 @@ import Base from '../layouts/Base.astro';
 import WaitlistForm from '../components/WaitlistForm.astro';
 import { app } from '../app.config';
 ---
-<Base title="Join the waitlist" description={`Join the ${app.name} waitlist and get one email when it launches.`}>
+<Base title="Join the waitlist" description={`Join the ${app.name} waitlist for launch updates.`}>
   <article class="wrap waitlist-page">
     <p class="eyebrow">Launching soon</p>
     <h1>Join the waitlist</h1>
-    <p class="lead">Be first to measure your approach and jump. One email when we launch, nothing else.</p>
+    <p class="lead">Be first to measure your approach and jump. Launch updates and the occasional product question, no spam.</p>
     <div class="card">
       <WaitlistForm app="statjump" />
     </div>

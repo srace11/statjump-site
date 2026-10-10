@@ -57,10 +57,14 @@ const privacyPath = new URL(cfg.privacyUrl).pathname;
     <input id="wl-website" name="website" type="text" tabindex="-1" autocomplete="off" />
   </div>
 
+  <!-- Where this visit came from, filled in from SourceTracker (see the script below). -->
+  <input type="hidden" name="source" value="" data-source />
+
   <div class="consent">
     <input id="wl-consent" name="consent" type="checkbox" value="on" required />
     <label for="wl-consent">
-      Email me about the {cfg.displayName} launch. I've read the <a href={privacyPath}>privacy notice</a>.
+      Email me {cfg.displayName} launch updates and the occasional product research question.
+      I've read the <a href={privacyPath}>privacy notice</a>.
     </label>
   </div>
 
@@ -76,6 +80,9 @@ const privacyPath = new URL(cfg.privacyUrl).pathname;
   const form = document.querySelector('[data-waitlist]');
   const status = form.querySelector('[data-status]');
   const button = form.querySelector('button[type="submit"]');
+  try {
+    form.querySelector('[data-source]').value = sessionStorage.getItem('signup-source') || '';
+  } catch {}
 
   const show = (text, kind) => {
     status.textContent = text;
