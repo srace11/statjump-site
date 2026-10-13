@@ -17,8 +17,8 @@ export const app = {
 
   // Support contact. This address is published on the support, privacy and terms pages.
   contactEmail: '', // Not published yet. Set it before restoring the support and terms pages.
-  // Shown only on the privacy notice, for deletion requests.
-  privacyEmail: 'hello@shaneracey.com',
+  // Shown on the privacy notice (deletion requests) and in the About section. Forwards to Gmail via Cloudflare Email Routing.
+  privacyEmail: 'hello@statjump.app',
 
   // Images in public/. Replace the files or point these at new ones.
   icon: '/brand/stat-jump-app-icon.svg',
