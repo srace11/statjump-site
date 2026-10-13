@@ -9,7 +9,7 @@ export const app = {
     'Stat Jump turns a phone video of your volleyball approach and jump into numbers you can train against.',
 
   // Full URL of this mini-site, no trailing slash. Used for SEO, the sitemap and link previews.
-  url: 'https://statjump.shaneracey.com',
+  url: 'https://statjump.app',
 
   // Developer / legal entity shown on the policy pages.
   developer: 'Shane Racey',
