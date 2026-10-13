@@ -19,10 +19,24 @@ const wrap = (text, max) => {
 const lockup = await sharp(await readFile(new URL('../public/brand/stat-jump-lockup-reverse.svg', import.meta.url)), { density: 300 })
   .resize({ width: 760 }).png().toBuffer();
 
+// The slogan wraps onto at most two lines (about 18 capitals fit across at this size), bottom line fixed at y=470.
+// A comma is the preferred break ("JUMP HIGHER," / "HIT HARDER") when both halves fit.
+const upper = app.tagline.toUpperCase();
+const comma = upper.indexOf(', ');
+const atComma = comma > 0 ? [upper.slice(0, comma + 1), upper.slice(comma + 2)] : null;
+const slogan = upper.length <= 18 ? [upper]
+  : atComma && atComma.every((l) => l.length <= 18) ? atComma
+  : wrap(upper, 18).slice(0, 2);
+const size = slogan.length > 1 ? 84 : 92;
+const lineGap = Math.round(size * 0.98);
+const sloganSvg = slogan
+  .map((line, i) => `<tspan x="80" y="${470 - (slogan.length - 1 - i) * lineGap}">${esc(line)}</tspan>`)
+  .join('');
+
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
   <rect width="1200" height="630" fill="#0b1b33"/>
   <rect x="0" y="600" width="1200" height="30" fill="#9be15d"/>
-  <text x="80" y="470" fill="#9be15d" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="92" font-weight="800" font-style="italic">${esc(app.tagline.toUpperCase())}</text>
+  <text fill="#9be15d" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="${size}" font-weight="800" font-style="italic">${sloganSvg}</text>
   <text x="80" y="540" fill="#a9b6cc" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="30" font-weight="700">${esc(new URL(app.url).host)}</text>
 </svg>`;
 
