@@ -38,10 +38,26 @@ const metrics = [
   { name: 'Approach', body: 'Footwork pattern, speed build-up, and habits like a bunny hop or stutter step.' },
 ];
 
+// After the scores: what the app does with them.
+const train = [
+  {
+    title: 'Training built from your scores',
+    body: 'Your lowest scores point to what to work on. Stat Jump turns them into training for those parts of your approach, so you know what to practice next, not just what went wrong.',
+  },
+  {
+    title: 'Progress log',
+    body: 'Every analysis is saved to your log. Watch each score change from session to session and see whether your training is working.',
+  },
+];
+
 const soon = [
-  { title: 'Training to jump higher', body: 'Training built from your scores to help you add height.' },
-  { title: 'Personal analytics log', body: 'A log of every session, so you can see your progress over time.' },
-  { title: 'Team tracking and analysis', body: 'Track and compare analyses across a whole team.' },
+  {
+    title: 'Beta testing',
+    body: 'Beta invites go to people on the waitlist first.',
+    link: { href: '/waitlist', label: 'Join the waitlist' },
+  },
+  { title: 'Team and coach platform', body: "Track and compare analyses across a whole team, and follow each player's progress." },
+  { title: 'Launch: late fall', body: 'Stat Jump is planned for iOS and Android in late fall 2026.' },
 ];
 
 // The slogan's phrases ("Jump higher," / "hit harder") never split, so narrow screens break after the comma.
@@ -61,21 +77,13 @@ const faq = [
     a: "Yes, a lot. Film from the side at a right angle to your approach, with the phone held still: from behind or at a slant it can't see your steps or knee bend, and distances come out wrong.",
   },
   {
-    q: 'How accurate is it?',
-    a: "It hasn't been checked against measured jumps yet, and we're doing that during the beta, so treat the numbers as estimates and watch how they change between your own clips.",
-  },
-  {
     q: 'Does it replace a coach?',
-    a: 'No. It works alongside a coach, showing what changed from one rep to the next.',
+    a: "No. Nothing replaces a real coach. Stat Jump works alongside one: after a coach works with an athlete, the scores show what changed from one jump to the next. For players without a coach, it's a good place to start: getting rid of a bunny hop, fixing form that could lead to injury, or finding what's holding your jump back.",
   },
   { q: 'Does my video get uploaded anywhere?', a: 'No. Everything runs on your phone, and no video leaves it.' },
   {
     q: 'If I analyze the same video twice, do I get the same score?',
     a: 'Yes. The same video always gets the same score.',
-  },
-  {
-    q: 'Which jumps does it analyze?',
-    a: 'One spike approach per video. Block jumps and back-row attacks are not supported yet.',
   },
   {
     q: 'How does it spot a bunny hop or a stutter step?',
@@ -85,8 +93,6 @@ const faq = [
     q: 'How much does it cost?',
     a: "It's free during the beta. The beta won't last forever, and paid plans will come later.",
   },
-  { q: 'Which phones does it work on?', a: 'We plan to release it for both iOS and Android.' },
-  { q: 'When does it launch?', a: "Late fall. Join the waitlist and we'll email you when it's out." },
 ];
 ---
 <Base>
@@ -186,6 +192,20 @@ const faq = [
     </div>
   </section>
 
+  <!-- After your scores: training and the progress log -->
+  <section id="training" class="section wrap">
+    <p class="eyebrow">After your scores</p>
+    <h2>Train what's holding you back</h2>
+    <div class="train">
+      {train.map((f) => (
+        <div class="card">
+          <h3>{f.title}</h3>
+          <p>{f.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
   <!-- Coming soon -->
   <section id="soon" class="section wrap">
     <p class="eyebrow">Coming soon</p>
@@ -195,9 +215,21 @@ const faq = [
         <div class="card">
           <h3>{f.title}</h3>
           <p>{f.body}</p>
+          {f.link && <p class="more"><a href={f.link.href}>{f.link.label}</a></p>}
         </div>
       ))}
     </div>
+  </section>
+
+  <!-- Validation: a short summary; the details are on /validation -->
+  <section id="validation" class="section wrap narrow">
+    <p class="eyebrow">Validation</p>
+    <h2>How we're testing it</h2>
+    <p class="section-lead">
+      In side-on tests, two independent measurements of each jump, flight time and hip rise, agreed to within about
+      1.6 inches on average. Further testing is in progress.
+    </p>
+    <p class="center"><a class="button outline" href="/validation">Read the validation notes</a></p>
   </section>
 
   <!-- Pricing -->
@@ -401,6 +433,11 @@ const faq = [
     .metric[aria-hidden='true'] { display: none; }
   }
 
+  .train { display: grid; gap: 16px; }
+  @media (min-width: 760px) { .train { grid-template-columns: repeat(2, 1fr); } }
+  .card p.more { margin-top: 12px; }
+  .card p.more a { font-weight: 600; }
+  .center { text-align: center; margin: 0; }
   .soon { display: grid; gap: 16px; }
   @media (min-width: 760px) { .soon { grid-template-columns: repeat(3, 1fr); } }
   .soon .card { background: transparent; }

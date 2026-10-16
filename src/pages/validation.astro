@@ -1,0 +1,88 @@
+---
+// Validation notes, summarized from statjump-app/analysis/out/validation.txt and
+// statjump-app/docs/validation-2026-10-12.md (analyzer 0.8.0 to 0.13.0, rubric 0.2).
+// Numbers are converted to inches. Update this page when new validation rounds land.
+import Base from '../layouts/Base.astro';
+
+const updated = 'October 16, 2026';
+---
+<Base title="Validation" description="How Stat Jump's measurements are being tested, what we found, and what's still in progress.">
+  <article class="wrap prose">
+    <h1>Validation</h1>
+    <p class="meta">Last updated {updated}. Further testing is in progress.</p>
+
+    <p>
+      Stat Jump measures your jump from a phone video. This page explains how we're checking those numbers, what
+      we've found so far, and what still needs work. These are early results from our own testing, not lab
+      measurements.
+    </p>
+
+    <h2>What we tested</h2>
+    <ul>
+      <li>
+        <strong>20 jumps by one athlete</strong> (6'2"), filmed on an iPhone on a tripod at head height, from 10 and
+        15 feet away, in portrait and landscape. 15 were filmed side-on and 5 at an angle of about 45°.
+      </li>
+      <li>
+        <strong>Reference marks:</strong> tape on a wall at 9'0" that the athlete reached for on every jump, and a
+        tape measure along the floor.
+      </li>
+      <li><strong>Two earlier clips</strong> from other players of known height, used as sanity checks.</li>
+    </ul>
+
+    <h2>What we found</h2>
+    <ul>
+      <li><strong>Every side-on jump was measured:</strong> 15 of 15.</li>
+      <li>
+        <strong>Vertical:</strong> each jump is measured two independent ways, from time in the air and from how far
+        the hips rise. Across the side-on jumps the two agreed to within 1.6 inches on average. The verticals
+        averaged 18.8 inches and stayed consistent from jump to jump (a spread of 1.3 inches).
+      </li>
+      <li>
+        <strong>Take-off and landing timing</strong> matched frames picked out by hand on the jumps we checked.
+      </li>
+      <li>
+        <strong>Touch height</strong> averaged within a fraction of an inch of the 9'0" tape. That result comes
+        after a correction tuned on these same jumps, so it needs a second athlete to confirm it.
+      </li>
+      <li>
+        <strong>Footwork:</strong> on all 15 side-on jumps it correctly identified the penultimate step, the
+        closing step and both feet in the plant.
+      </li>
+      <li>
+        <strong>Slow motion:</strong> given a slow-motion clip, it refused to treat it as real time instead of
+        reporting an impossible jump.
+      </li>
+      <li>
+        <strong>Phone setup:</strong> portrait and landscape gave the same results, and so did 10 and 15 feet away
+        (15 feet was the most consistent). At 30fps the numbers held up, but the uncertainty doubled to about ±4
+        inches and ground contact time wasn't scored.
+      </li>
+      <li>
+        <strong>Angled filming:</strong> the vertical was measured on 4 of the 5 angled jumps, in line with side-on.
+        Past about 40° off side-on, knee and trunk angles are left unmeasured rather than reported wrong.
+      </li>
+    </ul>
+
+    <h2>Not validated yet</h2>
+    <ul>
+      <li>Ground contact time, knee bend, arm swing and step lengths have no reference measurements yet.</li>
+      <li>All of the main testing used one athlete. The results need more players, body types and gyms.</li>
+      <li>The reference was a wall tape, not a Vertec or a jump mat.</li>
+      <li>
+        The standing-reach estimate used when you skip that question ran about 4 inches high for one athlete. We're
+        collecting more data before changing it.
+      </li>
+    </ul>
+
+    <h2>In progress</h2>
+    <ul>
+      <li>Measured verticals (Vertec or jump mat) and measured standing reach for every test clip.</li>
+      <li>More athletes, across levels, heights and gyms.</li>
+      <li>A camera-angle sweep at 0°, 15°, 30° and 45° to firm up the angle limits.</li>
+      <li>Hand-marked frames to check ground contact timing and step lengths.</li>
+    </ul>
+
+    <p><a href="/">Back to Stat Jump</a></p>
+  </article>
+</Base>
