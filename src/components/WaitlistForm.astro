@@ -20,6 +20,7 @@ interface WaitlistConfig {
   buttonText: string;
   successMessage: string;
   privacyUrl: string;
+  consentOptional?: boolean; // true: the box starts ticked and can be unticked (the signup is kept, not emailed)
   fields: Field[];
   action: string;
   turnstileSiteKey: string;
@@ -61,7 +62,7 @@ const privacyPath = new URL(cfg.privacyUrl).pathname;
   <input type="hidden" name="source" value="" data-source />
 
   <div class="consent">
-    <input id="wl-consent" name="consent" type="checkbox" value="on" required />
+    <input id="wl-consent" name="consent" type="checkbox" value="on" checked={cfg.consentOptional} required={!cfg.consentOptional} />
     <label for="wl-consent">
       Email me {cfg.displayName} launch updates and the occasional product research question.
       I've read the <a href={privacyPath}>privacy notice</a>.
@@ -109,7 +110,9 @@ const privacyPath = new URL(cfg.privacyUrl).pathname;
       const body = await res.json().catch(() => ({}));
       if (res.ok && body.ok) {
         form.querySelectorAll('.field, .consent, .cf-turnstile, button').forEach((el) => (el.hidden = true));
-        show(body.message || successMessage, 'success');
+        // Unticked (allowed when the box is optional): on the list, but no emails promised.
+        const msg = data.consent ? body.message || successMessage : "You're on the list. We won't email you, since you unticked the box.";
+        show(msg, 'success');
         status.focus();
         return;
       }
