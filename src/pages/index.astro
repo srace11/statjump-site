@@ -30,14 +30,19 @@ const facts = [
   { title: 'Scored for your level', body: 'Youth to elite. Jump height is judged against your level, while technique is judged the same for everyone.' },
 ];
 
+// The 10 metrics on the stat card (statjump-app showcase, analyzer 0.13). Eight feed the seven scores
+// (see src/data/rubric.ts); ball speed and hit angle are measured but not scored yet.
 const metrics = [
-  { name: 'Estimated vertical', body: 'Jump height, from flight time and hip rise.' },
-  { name: 'Touch height', body: 'How far you reach above the net.' },
-  { name: 'Ground contact time', body: 'How long your final plant takes.' },
-  { name: 'Arm swing', body: 'Backswing range and timing, forward swing, bow-and-arrow.' },
-  { name: 'Knee bend and load', body: 'Depth, trunk lean and timing of the plant.' },
-  { name: 'Penultimate step', body: 'Length, rhythm, hip lowering and a heel-first plant.' },
-  { name: 'Approach', body: 'Footwork pattern, speed build-up, and habits like a bunny hop or stutter step.' },
+  { name: 'Vertical', body: 'How high you jump, from your time in the air, checked against how far your hips rise.', feeds: 'Counts toward: Vertical' },
+  { name: 'Touch height', body: 'How high you reach at the top, and how far above the net.', feeds: 'Counts toward: Touch height' },
+  { name: 'Hang time', body: 'How long you stay in the air, from take-off to landing.', feeds: 'Counts toward: Vertical' },
+  { name: 'Approach speed', body: 'How fast you are moving as you go into your plant.', feeds: 'Counts toward: Approach' },
+  { name: 'Penultimate step', body: 'How quickly your second-to-last step happens.', feeds: 'Counts toward: Penultimate step' },
+  { name: 'Plant contact', body: 'How long your feet stay on the floor in the final plant.', feeds: 'Counts toward: Ground contact' },
+  { name: 'Deepest knee', body: 'How far your knees bend as you load into the jump.', feeds: 'Counts toward: Knee bend' },
+  { name: 'Shoulder angle', body: 'How high your hitting elbow is cocked before the swing.', feeds: 'Counts toward: Arm swing' },
+  { name: 'Ball speed', body: 'How fast the ball leaves your hand, when the ball is in the frame.', feeds: 'Measured, not scored yet' },
+  { name: 'Hit angle', body: 'How steeply you hit down on the ball.', feeds: 'Measured, not scored yet' },
 ];
 
 // After the scores: what the app does with them.
@@ -100,7 +105,8 @@ const faq = [
       <p class="eyebrow on-navy">Volleyball approach analysis</p>
       <h1 class="slogan">{sloganParts.map((part, i) => <>{i > 0 && ' '}<span class="phrase">{part}</span></>)}</h1>
       <p class="lead">
-        Film one spike approach from the side. {app.name} scores every part of it out of 10, so you know exactly what to fix.
+        Record a video of your approach, jump and swing. {app.name} tracks your body through every frame and measures 10
+        metrics, so you know exactly what you need to fix.
       </p>
       <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
       <a class="button hero-cta" href="/waitlist">Join the waitlist</a>
@@ -169,21 +175,25 @@ const faq = [
   <section id="measures" class="section">
     <div class="wrap head">
       <p class="eyebrow">What it measures</p>
-      <h2>Seven scores from one approach</h2>
-      <p class="section-lead">Each part is scored out of 10 and rolled into an overall score.</p>
+      <h2>10 metrics from one approach</h2>
+      <p class="section-lead">
+        They feed seven scores, each out of 10, which roll up into your overall score.
+      </p>
     </div>
-    <div class="marquee" role="group" aria-label="The seven scores">
+    <div class="marquee" role="group" aria-label="The 10 metrics">
       <div class="track">
         {metrics.map((m) => (
           <div class="card metric">
             <h3>{m.name}</h3>
             <p>{m.body}</p>
+            <p class="feeds">{m.feeds}</p>
           </div>
         ))}
         {metrics.map((m) => (
           <div class="card metric" aria-hidden="true">
             <h3>{m.name}</h3>
             <p>{m.body}</p>
+            <p class="feeds">{m.feeds}</p>
           </div>
         ))}
       </div>
@@ -407,7 +417,10 @@ const faq = [
   .marquee:hover .track, .marquee:focus-within .track { animation-play-state: paused; }
   @keyframes drift { to { transform: translateX(calc(-50% - 8px)); } }
   .metric { flex: none; width: 290px; padding: 20px; }
+  .metric { display: flex; flex-direction: column; }
   .metric h3 { font-size: 1.25rem; }
+  .metric > p:not(.feeds) { flex: 1; }
+  .card .feeds { margin-top: 12px; font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
   @media (prefers-reduced-motion: reduce) {
     /* Wrap into rows instead of a sideways scroller, so nothing is out of keyboard reach. */
     .marquee { overflow: visible; -webkit-mask-image: none; mask-image: none; }

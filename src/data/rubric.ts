@@ -1,6 +1,7 @@
 // Scoring rubric v0.2, copied from statjump-app/docs/rubric-v0.2.json (the doc rubric-v0.2.md wins if they differ).
 // Values are in the rubric's own units (m, s, deg, fraction, m/s); the page converts them for display.
 // When the app's rubric changes, update this file to match, never the other way round.
+// Last synced 2026-10-17 (analyzer 0.13: bow-and-arrow uses the shoulder angle, 4 / 2 / 4 points).
 
 export const rubricVersion = '0.2';
 
@@ -136,7 +137,7 @@ export const metrics: Metric[] = [
         label: 'Bow-and-arrow',
         weight: 0.25,
         about: 'Your arm position at the top of the jump.',
-        rule: 'Up to 6 points when your hitting elbow is at or above shoulder height and drawn back (3 if only one of the two), plus up to 4 points for raising your other arm 45° or more above horizontal.',
+        rule: 'Up to 4 points for your shoulder angle (the angle between your body and hitting upper arm) at your cocked position: full points from 100° to 135°, fewer if your elbow is lower or your arm is already straight overhead. 2 points for drawing your elbow back. Up to 4 points for raising your other arm 45° or more above horizontal.',
       },
     ],
   },
