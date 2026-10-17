@@ -7,6 +7,7 @@
 import Base from '../layouts/Base.astro';
 import { app } from '../app.config';
 import ScoringBreakdown from '../components/ScoringBreakdown.astro';
+import StoreBadges from '../components/StoreBadges.astro';
 
 const steps = [
   {
@@ -101,7 +102,8 @@ const faq = [
       <p class="lead">
         Film one spike approach from the side. {app.name} scores every part of it out of 10, so you know exactly what to fix.
       </p>
-      <a class="button" href="/waitlist">Join the waitlist</a>
+      <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
+      <a class="button hero-cta" href="/waitlist">Join the waitlist</a>
       <p class="note">Free to join. Launch updates, no spam.</p>
 
     </div>
@@ -353,6 +355,7 @@ const faq = [
     font-size: clamp(3.2rem, 12vw, 6rem); line-height: .92; letter-spacing: -.01em; color: var(--volt); margin: 0 0 22px; }
   .lead { font-size: clamp(1.08rem, 3.2vw, 1.3rem); color: #d5deea; max-width: 36rem; margin: 0 0 30px; }
   .slogan .phrase { white-space: nowrap; }
+  .hero-cta { margin-top: 24px; }
   .hero .button:focus-visible { outline-color: #fff; }
   .note { font-size: .9rem; color: #a9b6cc; margin: 12px 0 0; }
   .video { position: relative; overflow: hidden; width: var(--vw, min(860px, calc(100% - 40px))); max-height: 88vh;
