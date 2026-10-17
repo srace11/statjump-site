@@ -1,6 +1,7 @@
 ---
 // Home page, laid out like a single-scroll product page: hero, video, how it works,
-// what it measures, coming soon, about, pricing, FAQ, final call to action.
+// what it measures, training, coming soon, validation, FAQ, about, final call to action.
+// Pricing was removed while the beta is invite-only; the saved paid plan is in statjump-app/docs/pricing-plan.md.
 // Facts come from ~/Documents/statjump-app/README.md. Anything not decided yet is a
 // visible placeholder (class "ph"): replace those, don't invent numbers.
 import Base from '../layouts/Base.astro';
@@ -53,7 +54,7 @@ const train = [
 const soon = [
   {
     title: 'Beta testing',
-    body: 'Beta invites go to people on the waitlist first.',
+    body: "We're running a small, invite-only beta and picking a few testers from the waitlist. Joining doesn't guarantee a spot.",
     link: { href: '/waitlist', label: 'Join the waitlist' },
   },
   { title: 'Team and coach platform', body: "Track and compare analyses across a whole team, and follow each player's progress." },
@@ -88,10 +89,6 @@ const faq = [
   {
     q: 'How does it spot a bunny hop or a stutter step?',
     a: 'It tracks every time each foot touches the floor, and flags a bunny hop when both feet land together after a moment in the air before your penultimate step, along with stutter steps, crossover steps and standing starts.',
-  },
-  {
-    q: 'How much does it cost?',
-    a: "It's free during the beta. The beta won't last forever, and paid plans will come later.",
   },
 ];
 ---
@@ -230,25 +227,6 @@ const faq = [
       1.6 inches on average. Further testing is in progress.
     </p>
     <p class="center"><a class="button outline" href="/validation">Read the validation notes</a></p>
-  </section>
-
-  <!-- Pricing -->
-  <section id="pricing" class="section wrap">
-    <p class="eyebrow">Pricing</p>
-    <h2>Free while we're in beta</h2>
-    <div class="plans single">
-      <div class="card plan featured">
-        <p class="badge-tag">Limited time</p>
-        <h3>Beta</h3>
-        <p class="price">Free</p>
-        <ul>
-          <li>Full access to the app</li>
-          <li>Nothing to pay during the beta</li>
-        </ul>
-        <a class="button" href="/waitlist">Join the waitlist</a>
-      </div>
-    </div>
-    <p class="section-lead small">The beta won't last forever, and paid plans will come later.</p>
   </section>
 
   <!-- FAQ -->
@@ -448,16 +426,6 @@ const faq = [
   .about p { color: var(--fg); margin: 0 0 12px; }
   .about p:last-child { margin: 0; }
   .about p.ph { color: var(--muted); }
-
-  .plans { display: grid; gap: 16px; max-width: 420px; margin: 0 auto; }
-  .plan { display: flex; flex-direction: column; gap: 14px; }
-  .plan { position: relative; }
-  .plan.featured { border: 2px solid var(--volt); }
-  .card .badge-tag { position: absolute; top: -13px; left: 20px; margin: 0; background: var(--volt); color: var(--on-volt);
-    font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
-  .card .price { font-family: var(--font-mono); font-weight: 700; font-size: 1.8rem; margin: 0; color: var(--fg); }
-  .plan ul { margin: 0; padding-left: 20px; flex: 1; }
-  .plan li { margin: 4px 0; }
 
   .faq { display: grid; gap: 10px; }
   details { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 0 20px; }
