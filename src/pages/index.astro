@@ -105,8 +105,8 @@ const faq = [
       <p class="eyebrow on-navy">Volleyball approach analysis</p>
       <h1 class="slogan">{sloganParts.map((part, i) => <>{i > 0 && ' '}<span class="phrase">{part}</span></>)}</h1>
       <p class="lead">
-        Record a video of your approach, jump and swing. {app.name} tracks your body through every frame and measures 10
-        metrics, so you know exactly what you need to fix.
+        Record a video of your approach, jump and swing. {app.name} tracks your body through every frame, so you know
+        exactly what you need to fix.
       </p>
       <StoreBadges appStore={app.stores.appStore} googlePlay={app.stores.googlePlay} />
       <a class="button hero-cta" href="/waitlist">Join the waitlist</a>
@@ -363,7 +363,7 @@ const faq = [
   .hero-in { padding: 72px 20px 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
   .slogan { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase;
     font-size: clamp(3.2rem, 12vw, 6rem); line-height: .92; letter-spacing: -.01em; color: var(--volt); margin: 0 0 22px; }
-  .lead { font-size: clamp(1.08rem, 3.2vw, 1.3rem); color: #d5deea; max-width: 36rem; margin: 0 0 30px; }
+  .lead { font-size: clamp(1.08rem, 3.2vw, 1.3rem); color: #d5deea; max-width: 50rem; margin: 0 0 30px; text-wrap: balance; }
   .slogan .phrase { white-space: nowrap; }
   .hero-cta { margin-top: 24px; }
   .hero .button:focus-visible { outline-color: #fff; }
