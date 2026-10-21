@@ -1,4 +1,18 @@
 ---
-import ComingSoon from '../components/ComingSoon.astro';
+// Terms of Use: generated from the app repo (scripts/sync-app-policy.mjs -> src/generated/appTerms.json).
+import Base from '../layouts/Base.astro';
+import { app } from '../app.config';
+import appTerms from '../generated/appTerms.json';
 ---
-<ComingSoon title="Terms of Use" />
+<Base title="Terms of Use" description={`The terms for using the ${app.name} app.`}>
+  <article class="wrap prose">
+    <h1>Terms of Use</h1>
+    <p class="meta">Last updated {appTerms.updated}. Contact: <a href="mailto:hello@statjump.app">hello@statjump.app</a>.</p>
+    {appTerms.sections.map((sec) => (
+      <>
+        <h2>{sec.heading}</h2>
+        {sec.paragraphs.map((p) => <p>{p}</p>)}
+      </>
+    ))}
+  </article>
+</Base>
