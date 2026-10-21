@@ -1,23 +1,23 @@
 ---
-// Privacy notice for the waitlist only. A starting template, not legal advice:
-// review it (and replace it with a full policy) before the app itself launches.
+// Privacy policy: the website/waitlist notice below, plus the app policy generated from the app repo
+// (scripts/sync-app-policy.mjs -> src/generated/appPolicy.json).
 import Base from '../layouts/Base.astro';
 import { app } from '../app.config';
+import appPolicy from '../generated/appPolicy.json';
 
-const updated = 'October 18, 2026';
+const updated = 'October 21, 2026';
 ---
-<Base title="Privacy Policy" description={`How ${app.name} handles your waitlist signup.`}>
+<Base title="Privacy Policy" description={`How ${app.name} and its website handle your information.`}>
   <article class="wrap prose">
     <h1>Privacy Policy</h1>
-    <p class="meta">Waitlist notice. Last updated {updated}.</p>
+    <p class="meta">Last updated {updated}. Contact: <a href={`mailto:${app.privacyEmail}`}>{app.privacyEmail}</a>.</p>
+    <p>This page covers two things: the <a href="#website">website and waitlist</a> and the <a href="#app">{app.name} app</a>.</p>
 
-    <p>
-      {app.name} isn't released yet, so the only personal information we collect is what you give us when you
-      join the waitlist. This page explains what that is and what we do with it. We'll publish a full privacy
-      policy for the app before it launches.
-    </p>
+    <h2 id="website">Website and waitlist</h2>
 
-    <h2>What we collect</h2>
+    <p>The only personal information the website collects is what you give us when you join the waitlist.</p>
+
+    <h3>What we collect</h3>
     <ul>
       <li><strong>Your email address.</strong></li>
       <li><strong>Optional answers</strong> about your position or role and your level, if you choose to give them.</li>
@@ -37,7 +37,7 @@ const updated = 'October 18, 2026';
       </li>
     </ul>
 
-    <h2>Why we collect it</h2>
+    <h3>Why we collect it</h3>
     <p>We use your email address to:</p>
     <ul>
       <li><strong>Send you launch updates</strong> about {app.name}, including when it's out.</li>
@@ -58,7 +58,7 @@ const updated = 'October 18, 2026';
       <a href="#delete">Deleting your signup</a>.
     </p>
 
-    <h2 id="source">How we know where you came from</h2>
+    <h3 id="source">How we know where you came from</h3>
     <p>
       Links we share can carry a label, such as <code>?utm_source=reddit</code>. When you arrive, the site keeps
       that label, or else the name of the site that sent you, in your browser's session storage. That storage
@@ -66,33 +66,42 @@ const updated = 'October 18, 2026';
       your signup. We use no cookies for this, and nothing is sent anywhere unless you sign up.
     </p>
 
-    <h2>Who handles it</h2>
+    <h3>Who handles it</h3>
     <p>
       The waitlist runs on Cloudflare, which hosts the site and stores the signups for us. The form uses
       Cloudflare Turnstile to check that you're a person, not a bot. See
       <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare's privacy policy</a>.
     </p>
 
-    <h2>How long we keep it</h2>
+    <h3>How long we keep it</h3>
     <p>
       We keep your signup until six months after {app.name} launches, then delete it. You can ask us to delete
       it sooner at any time.
     </p>
 
-    <h2 id="delete">Deleting your signup</h2>
+    <h3 id="delete">Deleting your signup</h3>
     <p>
       Email <a href={`mailto:${app.privacyEmail}?subject=${encodeURIComponent(`Delete my ${app.name} waitlist signup`)}`}>{app.privacyEmail}</a>
       from the address you signed up with and ask us to delete it. We'll remove it and confirm within 30 days.
       You can also ask what we hold about you, or ask us to correct it, the same way.
     </p>
 
-    <h2>Children</h2>
+    <h3>Children</h3>
     <p>The waitlist isn't meant for children under 13. If you're under 13, please don't sign up.</p>
 
-    <h2>Changes</h2>
+    <h3>Changes</h3>
     <p>
       We may change this notice at any time, for any reason. When we do, we'll update the date at the top of
       this page.
     </p>
+
+    <h2 id="app">{app.name} app</h2>
+    <p class="meta">App policy last updated {appPolicy.updated}.</p>
+    {appPolicy.sections.map((sec) => (
+      <>
+        <h3>{sec.heading}</h3>
+        {sec.paragraphs.map((p) => <p>{p}</p>)}
+      </>
+    ))}
   </article>
 </Base>

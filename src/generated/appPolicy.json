@@ -1,0 +1,76 @@
+{
+  "title": "Privacy Policy",
+  "updated": "2026-10-21",
+  "draftNotice": null,
+  "sections": [
+    {
+      "heading": "The short version",
+      "paragraphs": [
+        "Stat Jump measures your jump from a video you choose. The video is analyzed on your phone. We do not upload it. There are no accounts and no advertising trackers."
+      ]
+    },
+    {
+      "heading": "What stays on your phone",
+      "paragraphs": [
+        "Your profile (height, standing reach, hitting hand, net, units and level), your analysis results and the videos you choose are processed and stored on your device only. We do not receive them and we cannot see them. If you save a clip to Photos, the app asks for add-only access: it can add videos but never reads your photo library.",
+        "The app downloads its analysis models from our server the first time it runs. That request carries no personal information or videos.",
+        "Your device may include app data in its own backup (iCloud or Google backup), under your device settings."
+      ]
+    },
+    {
+      "heading": "Camera and video",
+      "paragraphs": [
+        "If you tap Record, Stat Jump asks for camera access to record your approach jump so it can measure your touch height and vertical. The system recorder may also ask for the microphone because it records sound with video; the sound is not analyzed. If you upload a video instead, you pick it with the system picker and Stat Jump sees only that video. You can change these permissions in your phone settings at any time."
+      ]
+    },
+    {
+      "heading": "No accounts, no ad tracking",
+      "paragraphs": [
+        "You do not sign in. We do not use advertising identifiers, we do not track you across other apps or websites, and we do not share data with advertisers or data brokers."
+      ]
+    },
+    {
+      "heading": "Anonymous usage data",
+      "paragraphs": [
+        "To improve the app, Stat Jump sends anonymous usage events to PostHog, our analytics provider (for example: that a video was chosen, that an analysis finished, that the plans screen was opened, that a purchase succeeded). Events carry a random anonymous ID that is not linked to you. They never include your videos, results, height, reach or any other profile value. We do not record your screen.",
+        "You can turn this off any time in Settings with Share anonymous usage data. If we opened the app from a link with a source tag (for example a coach’s link), we keep that tag to learn which links bring people in."
+      ]
+    },
+    {
+      "heading": "Subscriptions",
+      "paragraphs": [
+        "Payments are handled by Apple (App Store) or Google (Google Play). We do not see your card or payment details. We use RevenueCat to check whether your subscription is active. RevenueCat receives an anonymous app user ID and your purchase status, and does not receive your videos, results or profile."
+      ]
+    },
+    {
+      "heading": "Sharing",
+      "paragraphs": [
+        "When you tap Share, the app makes a showcase video and opens your phone’s share sheet. What you send, and to whom, is your choice. Once you share it, the app you share to handles it under its own policy."
+      ]
+    },
+    {
+      "heading": "Deleting your data",
+      "paragraphs": [
+        "Open Settings and choose Delete all my data. This erases your profile and results from the app on this phone and resets the random anonymous ID used for usage data, so earlier events can no longer be tied to this app. Events already sent stay in PostHog under the old anonymous ID, which can no longer be linked to you. Deleting the app does the same. Videos you recorded with the system camera or picked from your library stay in your own photo library until you delete them there. Because we hold no copy, there is nothing for us to delete."
+      ]
+    },
+    {
+      "heading": "Children",
+      "paragraphs": [
+        "Many athletes are minors. Because we collect no personal information and run no accounts, there is no child data on our side. The app is not directed to children under 13 and does not ask for their age or any contact details. If you are under 13, please use the app with a parent or guardian."
+      ]
+    },
+    {
+      "heading": "Changes",
+      "paragraphs": [
+        "If this policy changes we will update it in the app and note the date at the top."
+      ]
+    },
+    {
+      "heading": "Contact",
+      "paragraphs": [
+        "Questions: hello@statjump.app"
+      ]
+    }
+  ]
+}

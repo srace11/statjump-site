@@ -4,8 +4,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "sync-policy": "node scripts/sync-app-policy.mjs",
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/sync-app-policy.mjs && astro build",
     "preview": "astro preview",
     "og": "node scripts/make-og.mjs"
   },
