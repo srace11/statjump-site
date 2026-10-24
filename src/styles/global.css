@@ -3,7 +3,7 @@
 @font-face { font-family: 'Barlow Condensed'; src: url('/fonts/BarlowCondensed-ExtraBoldItalic.woff2') format('woff2'); font-weight: 800; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('/fonts/Inter-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('/fonts/Inter-SemiBold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
-@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('/fonts/Inter-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 
 :root {
   color-scheme: light dark;
@@ -23,7 +23,7 @@
   --maxw: 1040px;
   --font: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --font-mono: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; /* numbers: Inter, always with tabular-nums */
 }
 @media (prefers-color-scheme: dark) {
   :root {
