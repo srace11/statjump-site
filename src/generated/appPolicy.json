@@ -1,6 +1,6 @@
 {
   "title": "Privacy Policy",
-  "updated": "2026-10-21",
+  "updated": "2026-10-23",
   "draftNotice": null,
   "sections": [
     {
@@ -12,7 +12,7 @@
     {
       "heading": "What stays on your phone",
       "paragraphs": [
-        "Your profile (height, standing reach, hitting hand, net, units and level), your analysis results and the videos you choose are processed and stored on your device only. We do not receive them and we cannot see them. If you save a clip to Photos, the app asks for add-only access: it can add videos but never reads your photo library.",
+        "Your profile (height, standing reach, hitting hand, net, units and level), your analysis results and the videos you choose are processed and stored on your device only. We do not receive them and we cannot see them. If you save a clip to Photos, the app asks for add-only access: it can add videos but never reads your photo library. An optional profile photo that you choose or take stays on your device and is never uploaded.",
         "The app downloads its analysis models from our server the first time it runs. That request carries no personal information or videos.",
         "Your device may include app data in its own backup (iCloud or Google backup), under your device settings."
       ]
