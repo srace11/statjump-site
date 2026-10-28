@@ -1,6 +1,6 @@
 {
   "title": "Terms of Use",
-  "updated": "2026-10-21",
+  "updated": "2026-10-28",
   "draftNotice": null,
   "sections": [
     {
@@ -35,18 +35,18 @@
       ]
     },
     {
-      "heading": "Free tier and Premium",
+      "heading": "Free tier and Stat Jump Pro",
       "paragraphs": [
         "Free: your first analysis is fully unlocked. After that you get one analysis a week with headline numbers. Your history and sharing are always free.",
-        "Premium unlocks unlimited analyses and the full breakdown on every jump. It is offered as a yearly or a monthly subscription. We may change what is free and what is Premium in future versions of the app."
+        "Stat Jump Pro unlocks unlimited analyses and the full breakdown on every jump. It is offered as a yearly or a monthly subscription. We may change what is free and what is Pro in future versions of the app."
       ]
     },
     {
       "heading": "Subscriptions and billing",
       "paragraphs": [
-        "Premium is billed by Apple (App Store) or Google (Google Play) through your store account, in the price and currency shown before you confirm. We do not receive your payment details. We use RevenueCat to check whether your subscription is active.",
+        "Stat Jump Pro is billed by Apple (App Store) or Google (Google Play) through your store account, in the price and currency shown before you confirm. We do not receive your payment details. We use RevenueCat to check whether your subscription is active.",
         "Subscriptions renew automatically for the same length of time unless you turn off auto-renew at least 24 hours before the current period ends. Your store account is charged for renewal within 24 hours before the period ends.",
-        "To manage or cancel, open your Apple ID or Google Play subscription settings. Deleting the app does not cancel your subscription. Cancelling stops the next renewal and you keep Premium until the end of the period you paid for.",
+        "To manage or cancel, open your Apple ID or Google Play subscription settings. Deleting the app does not cancel your subscription. Cancelling stops the next renewal and you keep Pro until the end of the period you paid for.",
         "Refunds are handled by Apple or Google under their policies, not by us. We cannot issue refunds for store purchases.",
         "Prices may change. If a price goes up, we will give notice as the store requires, and you can cancel before it takes effect. If you subscribed at the founding yearly price, you keep that price for as long as your subscription stays continuously active. If it lapses, the current price applies if you resubscribe."
       ]
@@ -61,7 +61,7 @@
     {
       "heading": "Acceptable use",
       "paragraphs": [
-        "Do not use Stat Jump to break the law or anyone’s rights, to film or share people without their permission, or to harass or harm others. Do not copy, reverse engineer, decompile or extract the code or analysis models, try to get around the free limit or the Premium checks, interfere with the app or our servers, or use the app to build a competing product. Do not present edited or fabricated results as real measurements."
+        "Do not use Stat Jump to break the law or anyone’s rights, to film or share people without their permission, or to harass or harm others. Do not copy, reverse engineer, decompile or extract the code or analysis models, try to get around the free limit or the Pro checks, interfere with the app or our servers, or use the app to build a competing product. Do not present edited or fabricated results as real measurements."
       ]
     },
     {
