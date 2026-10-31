@@ -16,7 +16,7 @@ export const app = {
   hubUrl: 'https://shaneracey.com',
 
   // Support contact. This address is published on the support, privacy and terms pages.
-  contactEmail: '', // Not published yet. Set it before restoring the support and terms pages.
+  contactEmail: 'hello@statjump.app',
   // Shown on the privacy notice (deletion requests) and in the About section. Forwards to Gmail via Cloudflare Email Routing.
   privacyEmail: 'hello@statjump.app',
 
@@ -44,12 +44,32 @@ export const app = {
 
   faq: [
     {
-      q: 'How do I delete my account and data?',
-      a: 'TODO: Describe the in-app path (for example Settings > Account > Delete account), or tell people to email the address below. Both stores require this for apps with accounts.',
+      q: 'How should I film my jump?',
+      a: 'Film from the side, 10 to 15 ft (3 to 4.5 m) away, with the phone at hip height on a tripod or held still. Keep it level, record at 60 fps or higher at normal speed (not slow motion), and stand still for a second before your approach. Keep your whole approach and landing in frame, one jump per video, under 20 seconds, with nobody crossing the shot.',
+    },
+    {
+      q: 'My jump height looks wrong. What can I check?',
+      a: 'First check your height and standing reach in your profile, since every number is scaled from them. Then check the filming setup above: side-on, level, still, 60 fps, and a second of standing still at the start. Results are estimates, and a 30 fps clip or someone crossing the frame makes them less precise. If it still looks off, email us using the address below.',
+    },
+    {
+      q: 'Are my videos uploaded?',
+      a: 'No. Stat Jump analyzes your video on your phone, and your videos, results and profile stay there. There are no accounts. See the Privacy Policy for details.',
+    },
+    {
+      q: 'How do I delete my data?',
+      a: 'In the app, go to Profile > Settings > Delete all my data. That erases your profile, results and stored clips from your phone. Deleting the app does the same. We hold no copy, so there is nothing to delete on our side. Videos in your photo library stay there until you delete them.',
+    },
+    {
+      q: 'What do I get for free, and what does Stat Jump Pro add?',
+      a: 'Free gives you unlimited analyses with your touch height, vertical, hit speed, overall score and hang time, plus your history, personal bests, drills and a share video. Your first analysis is fully unlocked. Stat Jump Pro, monthly or yearly, adds strengths and fixes, the full breakdown on every jump, progress trends, and the overall score and score bars on your share video.',
     },
     {
       q: 'How do I restore a purchase?',
-      a: 'TODO: Describe how to restore purchases, or remove this question if the app has none.',
+      a: 'Go to Profile > Settings > Restore purchases, or tap Restore purchases on the plans screen. Make sure you are signed in to the same Apple ID or Google account you subscribed with.',
+    },
+    {
+      q: 'How do I cancel or get a refund?',
+      a: 'Apple and Google handle billing. Cancel in your Apple ID or Google Play subscription settings. Deleting the app does not cancel your subscription. After cancelling you keep Pro until the end of the period you paid for. Refunds are handled by Apple or Google under their policies, so request one from them.',
     },
     {
       q: 'I found a bug. How do I report it?',
