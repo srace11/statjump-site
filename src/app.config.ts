@@ -61,7 +61,7 @@ export const app = {
     },
     {
       q: 'What do I get for free, and what does Stat Jump Pro add?',
-      a: 'Free gives you unlimited analyses with your touch height, vertical, hit speed, overall score and hang time, plus your history, personal bests, drills and a share video. Your first analysis is fully unlocked. Stat Jump Pro, monthly or yearly, adds strengths and fixes, the full breakdown on every jump, progress trends, and the overall score and score bars on your share video.',
+      a: 'Free gives you 3 analyses a month, each with the full breakdown, plus your history, personal bests, drills and a share video. Stat Jump Pro, monthly or yearly, adds unlimited analyses, a training plan built from your jumps, drawing on and comparing videos, and the overall score and score bars on your share video.',
     },
     {
       q: 'How do I restore a purchase?',

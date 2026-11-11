@@ -1,6 +1,6 @@
 {
   "title": "Terms of Use",
-  "updated": "2026-10-28",
+  "updated": "2026-11-11",
   "draftNotice": null,
   "sections": [
     {
@@ -35,18 +35,33 @@
       ]
     },
     {
-      "heading": "Free tier and Stat Jump Pro",
+      "heading": "Free tier and paid plans",
       "paragraphs": [
-        "Free: unlimited analyses with your touch height, vertical, hit speed, overall score and hang time, plus your history, personal bests, drills and a share video. Your first analysis is fully unlocked.",
-        "Stat Jump Pro unlocks strengths and fixes, the full breakdown on every jump, progress trends, and the overall score and score bars on your share video. It is offered as a yearly or a monthly subscription. We may change what is free and what is Pro in future versions of the app."
+        "Free: 3 analyses per calendar month. Every analysis shows the full breakdown, and nothing in a saved result is locked. Free also includes your history, personal bests, goal tracker, the drill library, the Jump Foundations program and a share video with the Stat Jump watermark. Deleting a result does not give an analysis back.",
+        "Stat Jump Pro is an auto-renewing subscription, yearly or monthly. It adds unlimited analyses, a personalised training plan built from your jumps, video tools (draw on your video and compare two jumps), and the overall score and score bars on your share video.",
+        "Stat Jump Coach is a separate auto-renewing subscription, yearly or monthly. It includes everything in Pro and adds an unlimited roster of athletes (see Coach mode below).",
+        "You buy and manage Pro and Coach through the App Store or Google Play, and you cancel them there (see Subscriptions and billing). We may change what is free, what is in Pro and what is in Coach in future versions of the app."
+      ]
+    },
+    {
+      "heading": "Coach mode",
+      "paragraphs": [
+        "A coach can keep a roster of athletes on their own device and record jumps for each one. The roster, the athletes’ details, videos and results stay on the coach’s device. They are not shared with us or with the athletes.",
+        "If you are a coach, you are responsible for having each athlete’s permission to film them and to record their measurements, and for having a parent or guardian’s permission for any athlete under 18. Free coach use is limited to 2 athletes and shares the 3 analyses a month."
+      ]
+    },
+    {
+      "heading": "Training content",
+      "paragraphs": [
+        "Drills and programs in Stat Jump are general fitness information, not medical advice. Stop if something hurts. If you have a health concern, check with a doctor before you start."
       ]
     },
     {
       "heading": "Subscriptions and billing",
       "paragraphs": [
-        "Stat Jump Pro is billed by Apple (App Store) or Google (Google Play) through your store account, in the price and currency shown before you confirm. We do not receive your payment details. We use RevenueCat to check whether your subscription is active.",
+        "Stat Jump Pro and Stat Jump Coach are billed by Apple (App Store) or Google (Google Play) through your store account, in the price and currency shown before you confirm. We do not receive your payment details. We use RevenueCat to check whether your subscription is active.",
         "Subscriptions renew automatically for the same length of time unless you turn off auto-renew at least 24 hours before the current period ends. Your store account is charged for renewal within 24 hours before the period ends.",
-        "To manage or cancel, open your Apple ID or Google Play subscription settings. Deleting the app does not cancel your subscription. Cancelling stops the next renewal and you keep Pro until the end of the period you paid for.",
+        "To manage or cancel, open your Apple ID or Google Play subscription settings. Deleting the app does not cancel your subscription. Cancelling stops the next renewal and you keep your plan until the end of the period you paid for.",
         "Refunds are handled by Apple or Google under their policies, not by us. We cannot issue refunds for store purchases.",
         "Prices may change. If a price goes up, we will give notice as the store requires, and you can cancel before it takes effect. If you subscribed at the founding yearly price, you keep that price for as long as your subscription stays continuously active. If it lapses, the current price applies if you resubscribe."
       ]
@@ -61,7 +76,7 @@
     {
       "heading": "Acceptable use",
       "paragraphs": [
-        "Do not use Stat Jump to break the law or anyone’s rights, to film or share people without their permission, or to harass or harm others. Do not copy, reverse engineer, decompile or extract the code or analysis models, try to get around the Pro checks, interfere with the app or our servers, or use the app to build a competing product. Do not present edited or fabricated results as real measurements."
+        "Do not use Stat Jump to break the law or anyone’s rights, to film or share people without their permission, or to harass or harm others. Do not copy, reverse engineer, decompile or extract the code or analysis models, try to get around the plan limits, interfere with the app or our servers, or use the app to build a competing product. Do not present edited or fabricated results as real measurements."
       ]
     },
     {
